@@ -1,0 +1,24 @@
+{
+  "name": "pmc-website",
+  "version": "1.0.0",
+  "description": "PMC Hotel Project Management System",
+  "main": "index.html",
+  "scripts": {
+    "start": "npx serve .",
+    "deploy:test": "netlify deploy --dir=. --prod=false --message='Manual deploy to testing'",
+    "deploy:prod": "netlify deploy --dir=. --prod=true --message='Manual deploy to production'",
+    "deploy:test:ci": "netlify deploy --dir=. --prod=false --auth=$NETLIFY_AUTH_TOKEN --site=$NETLIFY_SITE_ID_TESTING",
+    "deploy:prod:ci": "netlify deploy --dir=. --prod=true --auth=$NETLIFY_AUTH_TOKEN --site=$NETLIFY_SITE_ID_PRODUCTION"
+  },
+  "keywords": [
+    "project-management",
+    "hotel",
+    "construction"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "serve": "^14.2.1"
+  }
+}
+

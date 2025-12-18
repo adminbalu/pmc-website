@@ -2356,14 +2356,18 @@
             <div class="stat-label">Complete</div>
       </div>
       </div>
-      <div class="header-actions">
+        <div class="header-actions">
           <button class="meeting-btn" onclick="showMeetingMinutes()">
             <i class="fas fa-sticky-note"></i>
             <span>Meeting Minutes</span>
-        </button>
+          </button>
           <button class="meeting-btn" onclick="showTodoList()" style="background: linear-gradient(135deg, #00c875, #00a862);">
             <i class="fas fa-tasks"></i>
             <span>To Do List</span>
+          </button>
+          <button class="meeting-btn" id="adminPanelBtn" onclick="showAdminPanel()" style="background: linear-gradient(135deg, #9c27b0, #7b1fa2); display: none;">
+            <i class="fas fa-user-shield"></i>
+            <span>Admin Panel</span>
           </button>
           <div class="user-info" id="userInfo">
             <i class="fas fa-user-circle"></i>
@@ -2567,22 +2571,78 @@
     <div class="login-content" onclick="event.stopPropagation()">
       <div class="login-header">
         <h2><i class="fas fa-user-circle"></i> User Login</h2>
-        <p>Select your role to access the system</p>
+        <p>Enter your credentials to access the system</p>
       </div>
-      <div class="login-form">
-        <input type="text" id="loginName" placeholder="Your Name" required />
-        <select id="loginRole" required>
-          <option value="">Select Role</option>
-          <option value="admin">Admin</option>
-          <option value="manager">Manager</option>
-          <option value="user">User</option>
-        </select>
+      <div class="login-form" id="loginForm">
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" id="loginUsername" placeholder="Enter username" required autocomplete="username" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="loginPassword" placeholder="Enter password" required autocomplete="current-password" />
+        </div>
         <div class="login-actions">
           <button class="btn btn-primary" onclick="handleLogin()" style="flex: 1;">
             <i class="fas fa-sign-in-alt"></i> Login
           </button>
-          <button class="btn btn-secondary" onclick="handleLogout()">
-            <i class="fas fa-sign-out-alt"></i> Logout
+          <button class="btn btn-secondary" onclick="showRegisterForm()">
+            <i class="fas fa-user-plus"></i> Register
+          </button>
+        </div>
+        <div style="text-align: center; margin-top: 12px;">
+          <button class="btn-link" onclick="showRegisterForm()" style="font-size: 12px; color: var(--text-secondary);">
+            Don't have an account? Register here
+          </button>
+        </div>
+      </div>
+      
+      <!-- Registration Form -->
+      <div class="login-form" id="registerForm" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">Full Name</label>
+          <input type="text" id="registerName" placeholder="Enter full name" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email Address</label>
+          <input type="email" id="registerEmail" placeholder="Enter your email" required autocomplete="email" />
+          <small style="font-size: 11px; color: var(--text-light);">Admin will approve your registration via email</small>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Username</label>
+          <input type="text" id="registerUsername" placeholder="Choose a username" required autocomplete="username" />
+          <small style="font-size: 11px; color: var(--text-light);">Must be unique, 3-20 characters</small>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Password</label>
+          <input type="password" id="registerPassword" placeholder="Enter password" required autocomplete="new-password" oninput="validatePassword()" />
+          <div id="passwordRequirements" style="font-size: 11px; margin-top: 4px;">
+            <div id="reqLength" style="color: var(--text-light);">• At least 8 characters</div>
+            <div id="reqUpper" style="color: var(--text-light);">• One uppercase letter</div>
+            <div id="reqLower" style="color: var(--text-light);">• One lowercase letter</div>
+            <div id="reqNumber" style="color: var(--text-light);">• One number</div>
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Confirm Password</label>
+          <input type="password" id="registerPasswordConfirm" placeholder="Confirm password" required autocomplete="new-password" oninput="validatePasswordMatch()" />
+          <div id="passwordMatch" style="font-size: 11px; margin-top: 4px; display: none;"></div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Role</label>
+          <select id="registerRole" required>
+            <option value="">Select Role</option>
+            <option value="user">User</option>
+            <option value="manager">Manager</option>
+          </select>
+          <small style="font-size: 11px; color: var(--text-light);">All registrations require admin approval</small>
+        </div>
+        <div class="login-actions">
+          <button class="btn btn-primary" onclick="handleRegister()" style="flex: 1;">
+            <i class="fas fa-user-plus"></i> Register
+          </button>
+          <button class="btn btn-secondary" onclick="showLoginForm()">
+            <i class="fas fa-arrow-left"></i> Back to Login
           </button>
         </div>
       </div>
@@ -2659,6 +2719,28 @@
       </div>
     </div>
               </div>
+
+  <!-- Admin Panel Modal -->
+  <div class="todo-list-modal" id="adminPanelModal" onclick="closeAdminPanelOnOverlay(event)">
+    <div class="todo-list-content" onclick="event.stopPropagation()">
+      <div class="todo-list-header">
+        <div class="todo-list-header-top">
+          <h2>
+            <i class="fas fa-user-shield"></i>
+            Admin Panel - Pending Registrations
+          </h2>
+          <button class="workflow-close" onclick="closeAdminPanel()">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      </div>
+      <div class="todo-list-body">
+        <div id="pendingRegistrationsList">
+          <!-- Pending registrations will be rendered here -->
+        </div>
+      </div>
+    </div>
+  </div>
 
   <!-- Todo List Modal -->
   <div class="todo-list-modal" id="todoListModal" onclick="closeTodoListOnOverlay(event)">
@@ -3021,14 +3103,60 @@
     // Data Model
     const STORAGE_KEY = 'hotelProject_v2';
     const USER_STORAGE_KEY = 'hotelProject_user';
+    const USERS_DB_KEY = 'hotelProject_users_db';
+    const PENDING_REGISTRATIONS_KEY = 'hotelProject_pending_registrations';
     const MEETING_STORAGE_KEY = 'hotelProject_meetings';
 
     // User Management
     let currentUser = JSON.parse(localStorage.getItem(USER_STORAGE_KEY)) || null;
 
+    // Simple password hashing (for demo - in production use proper hashing)
+    function hashPassword(password) {
+      // Simple hash function (in production, use bcrypt or similar)
+      let hash = 0;
+      for (let i = 0; i < password.length; i++) {
+        const char = password.charCodeAt(i);
+        hash = ((hash << 5) - hash) + char;
+        hash = hash & hash; // Convert to 32bit integer
+      }
+      return hash.toString(36);
+    }
+
+    function initUsersDatabase() {
+      const users = JSON.parse(localStorage.getItem(USERS_DB_KEY)) || [];
+      
+      // Create default admin user if database is empty
+      if (users.length === 0) {
+        const defaultAdmin = {
+          id: uid(),
+          name: 'Admin',
+          email: 'admin@hotelproject.com',
+          username: 'admin',
+          passwordHash: hashPassword('admin123'),
+          role: 'admin',
+          createdAt: new Date().toISOString(),
+          isActive: true
+        };
+        users.push(defaultAdmin);
+        localStorage.setItem(USERS_DB_KEY, JSON.stringify(users));
+      }
+      
+      return users;
+    }
+
     function initUser() {
+      initUsersDatabase();
       if (currentUser) {
-        updateUserUI();
+        // Verify user still exists
+        const users = JSON.parse(localStorage.getItem(USERS_DB_KEY)) || [];
+        const userExists = users.find(u => u.id === currentUser.id && u.isActive);
+        if (userExists) {
+          updateUserUI();
+        } else {
+          currentUser = null;
+          localStorage.removeItem(USER_STORAGE_KEY);
+          showLoginModal();
+        }
       } else {
         showLoginModal();
       }
@@ -3036,6 +3164,19 @@
 
     function showLoginModal() {
       document.getElementById('loginModal').classList.add('show');
+      showLoginForm();
+    }
+
+    function showLoginForm() {
+      document.getElementById('loginForm').style.display = 'flex';
+      document.getElementById('registerForm').style.display = 'none';
+      document.getElementById('loginUsername').focus();
+    }
+
+    function showRegisterForm() {
+      document.getElementById('loginForm').style.display = 'none';
+      document.getElementById('registerForm').style.display = 'flex';
+      document.getElementById('registerName').focus();
     }
 
     function closeLoginModal() {
@@ -3048,20 +3189,185 @@
       }
     }
 
-    function handleLogin() {
-      const name = document.getElementById('loginName').value.trim();
-      const role = document.getElementById('loginRole').value;
+    function validatePassword() {
+      const password = document.getElementById('registerPassword').value;
+      const requirements = {
+        length: password.length >= 8,
+        upper: /[A-Z]/.test(password),
+        lower: /[a-z]/.test(password),
+        number: /[0-9]/.test(password)
+      };
+
+      document.getElementById('reqLength').className = requirements.length ? 'password-valid' : 'password-invalid';
+      document.getElementById('reqUpper').className = requirements.upper ? 'password-valid' : 'password-invalid';
+      document.getElementById('reqLower').className = requirements.lower ? 'password-valid' : 'password-invalid';
+      document.getElementById('reqNumber').className = requirements.number ? 'password-valid' : 'password-invalid';
+
+      return Object.values(requirements).every(v => v);
+    }
+
+    function validatePasswordMatch() {
+      const password = document.getElementById('registerPassword').value;
+      const confirm = document.getElementById('registerPasswordConfirm').value;
+      const matchDiv = document.getElementById('passwordMatch');
       
-      if (!name || !role) {
-        showToast('Please enter name and select role', 'error');
+      if (confirm.length === 0) {
+        matchDiv.style.display = 'none';
+        return false;
+      }
+      
+      matchDiv.style.display = 'block';
+      if (password === confirm) {
+        matchDiv.textContent = '✓ Passwords match';
+        matchDiv.className = 'password-valid';
+        return true;
+      } else {
+        matchDiv.textContent = '✗ Passwords do not match';
+        matchDiv.className = 'password-invalid';
+        return false;
+      }
+    }
+
+    function handleLogin() {
+      const username = document.getElementById('loginUsername').value.trim();
+      const password = document.getElementById('loginPassword').value;
+      
+      if (!username || !password) {
+        showToast('Please enter username and password', 'error');
         return;
       }
 
-      currentUser = { name, role, loginTime: new Date().toISOString() };
+      const users = JSON.parse(localStorage.getItem(USERS_DB_KEY)) || [];
+      const user = users.find(u => u.username.toLowerCase() === username.toLowerCase() && u.isActive);
+      
+      if (!user) {
+        showToast('Invalid username or password', 'error');
+        return;
+      }
+
+      const passwordHash = hashPassword(password);
+      if (user.passwordHash !== passwordHash) {
+        showToast('Invalid username or password', 'error');
+        return;
+      }
+
+      currentUser = {
+        id: user.id,
+        name: user.name,
+        username: user.username,
+        role: user.role,
+        loginTime: new Date().toISOString()
+      };
+      
       localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(currentUser));
       updateUserUI();
       closeLoginModal();
-      showToast(`Welcome ${name}! (${role})`);
+      showToast(`Welcome ${user.name}!`);
+      
+      // Clear login form
+      document.getElementById('loginUsername').value = '';
+      document.getElementById('loginPassword').value = '';
+    }
+
+    function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+    }
+
+    function handleRegister() {
+      const name = document.getElementById('registerName').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
+      const username = document.getElementById('registerUsername').value.trim();
+      const password = document.getElementById('registerPassword').value;
+      const passwordConfirm = document.getElementById('registerPasswordConfirm').value;
+      const role = document.getElementById('registerRole').value;
+      
+      if (!name || !email || !username || !password || !role) {
+        showToast('Please fill in all fields', 'error');
+        return;
+      }
+
+      if (!validateEmail(email)) {
+        showToast('Please enter a valid email address', 'error');
+        return;
+      }
+
+      if (!validatePassword()) {
+        showToast('Password does not meet requirements', 'error');
+        return;
+      }
+
+      if (!validatePasswordMatch()) {
+        showToast('Passwords do not match', 'error');
+        return;
+      }
+
+      if (username.length < 3 || username.length > 20) {
+        showToast('Username must be 3-20 characters', 'error');
+        return;
+      }
+
+      // Check if username already exists (in active users or pending)
+      const users = JSON.parse(localStorage.getItem(USERS_DB_KEY)) || [];
+      const pending = JSON.parse(localStorage.getItem(PENDING_REGISTRATIONS_KEY)) || [];
+      const usernameExists = users.find(u => u.username.toLowerCase() === username.toLowerCase()) ||
+                            pending.find(p => p.username.toLowerCase() === username.toLowerCase());
+      
+      if (usernameExists) {
+        showToast('Username already exists', 'error');
+        return;
+      }
+
+      // Check if email already exists
+      const emailExists = users.find(u => u.email && u.email.toLowerCase() === email.toLowerCase()) ||
+                         pending.find(p => p.email && p.email.toLowerCase() === email.toLowerCase());
+      
+      if (emailExists) {
+        showToast('Email address already registered', 'error');
+        return;
+      }
+
+      // Generate approval token
+      const approvalToken = uid() + '-' + Date.now();
+      const approvalLink = `${window.location.origin}${window.location.pathname}?approve=${approvalToken}`;
+
+      // Create pending registration
+      const pendingRegistration = {
+        id: uid(),
+        name: name,
+        email: email,
+        username: username,
+        passwordHash: hashPassword(password),
+        role: role,
+        createdAt: new Date().toISOString(),
+        status: 'pending',
+        approvedBy: null,
+        approvedAt: null,
+        approvalToken: approvalToken,
+        approvalLink: approvalLink
+      };
+
+      pending.push(pendingRegistration);
+      localStorage.setItem(PENDING_REGISTRATIONS_KEY, JSON.stringify(pending));
+
+      // Send email notification to admin
+      sendApprovalEmail(pendingRegistration);
+
+      showToast('Registration submitted! Admin will review and approve your account via email.');
+      showLoginForm();
+      
+      // Clear registration form
+      document.getElementById('registerName').value = '';
+      document.getElementById('registerEmail').value = '';
+      document.getElementById('registerUsername').value = '';
+      document.getElementById('registerPassword').value = '';
+      document.getElementById('registerPasswordConfirm').value = '';
+      document.getElementById('registerRole').value = '';
+      document.getElementById('passwordRequirements').querySelectorAll('div').forEach(el => {
+        el.className = '';
+        el.style.color = 'var(--text-light)';
+      });
+      document.getElementById('passwordMatch').style.display = 'none';
     }
 
     function handleLogout() {
@@ -3072,18 +3378,381 @@
       showToast('Logged out successfully');
     }
 
+    // Admin Panel Functions
+    function showAdminPanel() {
+      if (!isAdmin()) {
+        showToast('Access denied. Admin only.', 'error');
+        return;
+      }
+      document.getElementById('adminPanelModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+      renderPendingRegistrations();
+    }
+
+    function closeAdminPanel() {
+      document.getElementById('adminPanelModal').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    function closeAdminPanelOnOverlay(event) {
+      if (event.target.id === 'adminPanelModal') {
+        closeAdminPanel();
+      }
+    }
+
+    function renderPendingRegistrations() {
+      const container = document.getElementById('pendingRegistrationsList');
+      const pending = JSON.parse(localStorage.getItem(PENDING_REGISTRATIONS_KEY)) || [];
+      
+      if (pending.length === 0) {
+        container.innerHTML = `
+          <div class="workflow-empty-state">
+            <i class="fas fa-check-circle"></i>
+            <p>No pending registrations</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = pending.map(reg => {
+        const createdDate = new Date(reg.createdAt).toLocaleDateString('en-US', {
+          year: 'numeric',
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit'
+        });
+
+        return `
+          <div class="todo-item" style="margin-bottom: 16px;">
+            <div class="todo-item-content">
+              <div class="todo-item-title">${reg.name}</div>
+              <div class="todo-item-meta" style="margin-top: 8px;">
+                <span><i class="fas fa-envelope"></i> ${reg.email}</span>
+                <span><i class="fas fa-user"></i> ${reg.username}</span>
+                <span class="todo-list-source ${reg.role}">${reg.role.charAt(0).toUpperCase() + reg.role.slice(1)}</span>
+                <span style="color: var(--text-light);"><i class="far fa-clock"></i> ${createdDate}</span>
+              </div>
+            </div>
+            <div class="todo-item-actions">
+              <button class="btn btn-primary btn-sm" onclick="approveRegistration('${reg.id}')" style="padding: 6px 12px; font-size: 12px;">
+                <i class="fas fa-check"></i> Approve
+              </button>
+              <button class="btn btn-secondary btn-sm" onclick="rejectRegistration('${reg.id}')" style="padding: 6px 12px; font-size: 12px;">
+                <i class="fas fa-times"></i> Reject
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function approveRegistration(registrationId) {
+      if (!isAdmin()) {
+        showToast('Access denied. Admin only.', 'error');
+        return;
+      }
+
+      const pending = JSON.parse(localStorage.getItem(PENDING_REGISTRATIONS_KEY)) || [];
+      const registration = pending.find(r => r.id === registrationId);
+      
+      if (!registration) {
+        showToast('Registration not found', 'error');
+        return;
+      }
+
+      // Check if username or email already exists
+      const users = JSON.parse(localStorage.getItem(USERS_DB_KEY)) || [];
+      const usernameExists = users.find(u => u.username.toLowerCase() === registration.username.toLowerCase());
+      const emailExists = users.find(u => u.email && u.email.toLowerCase() === registration.email.toLowerCase());
+      
+      if (usernameExists || emailExists) {
+        showToast('Username or email already exists', 'error');
+        // Remove from pending
+        const filtered = pending.filter(r => r.id !== registrationId);
+        localStorage.setItem(PENDING_REGISTRATIONS_KEY, JSON.stringify(filtered));
+        renderPendingRegistrations();
+        return;
+      }
+
+      // Create approved user
+      const newUser = {
+        id: registration.id,
+        name: registration.name,
+        email: registration.email,
+        username: registration.username,
+        passwordHash: registration.passwordHash,
+        role: registration.role,
+        createdAt: registration.createdAt,
+        isActive: true,
+        approvedBy: currentUser.id,
+        approvedAt: new Date().toISOString()
+      };
+
+      users.push(newUser);
+      localStorage.setItem(USERS_DB_KEY, JSON.stringify(users));
+
+      // Remove from pending
+      const filtered = pending.filter(r => r.id !== registrationId);
+      localStorage.setItem(PENDING_REGISTRATIONS_KEY, JSON.stringify(filtered));
+
+      renderPendingRegistrations();
+      showToast(`Registration approved! User ${registration.name} (${registration.email}) can now login.`);
+    }
+
+    function rejectRegistration(registrationId) {
+      if (!isAdmin()) {
+        showToast('Access denied. Admin only.', 'error');
+        return;
+      }
+
+      if (!confirm('Reject this registration? This action cannot be undone.')) {
+        return;
+      }
+
+      const pending = JSON.parse(localStorage.getItem(PENDING_REGISTRATIONS_KEY)) || [];
+      const registration = pending.find(r => r.id === registrationId);
+      
+      if (!registration) {
+        showToast('Registration not found', 'error');
+        return;
+      }
+
+      // Remove from pending
+      const filtered = pending.filter(r => r.id !== registrationId);
+      localStorage.setItem(PENDING_REGISTRATIONS_KEY, JSON.stringify(filtered));
+
+      renderPendingRegistrations();
+      showToast(`Registration rejected for ${registration.name} (${registration.email})`);
+    }
+
+    function sendApprovalEmail(registration) {
+      const adminEmail = 'adminbalu@gmail.com';
+      const subject = 'PMC website approval';
+      const approvalLink = registration.approvalLink;
+      
+      const emailBody = `New user registration requires approval:
+
+Name: ${registration.name}
+Email: ${registration.email}
+Username: ${registration.username}
+Role: ${registration.role}
+Registration Date: ${new Date(registration.createdAt).toLocaleString()}
+
+Click the link below to approve this registration:
+${approvalLink}
+
+Or copy and paste this link in your browser:
+${approvalLink}
+
+To reject this registration, please use the Admin Panel in the application.`;
+
+      // Create mailto link
+      const mailtoLink = `mailto:${adminEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+      
+      // Show email notification modal
+      showEmailNotificationModal(registration, mailtoLink, emailBody);
+    }
+
+    function showEmailNotificationModal(registration, mailtoLink, emailBody) {
+      // Create or update email notification modal
+      let modal = document.getElementById('emailNotificationModal');
+      if (!modal) {
+        modal = document.createElement('div');
+        modal.id = 'emailNotificationModal';
+        modal.className = 'todo-list-modal';
+        modal.innerHTML = `
+          <div class="todo-list-content" onclick="event.stopPropagation()" style="max-width: 600px;">
+            <div class="todo-list-header">
+              <div class="todo-list-header-top">
+                <h2>
+                  <i class="fas fa-envelope"></i>
+                  Email Notification
+                </h2>
+                <button class="workflow-close" onclick="closeEmailNotification()">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            </div>
+            <div class="todo-list-body">
+              <div style="padding: 20px;">
+                <p style="margin-bottom: 16px; color: var(--text);">
+                  A registration approval email has been prepared for <strong>adminbalu@gmail.com</strong>
+                </p>
+                <div style="background: var(--bg); padding: 16px; border-radius: var(--radius); margin-bottom: 16px; font-size: 13px;">
+                  <div style="margin-bottom: 8px;"><strong>To:</strong> adminbalu@gmail.com</div>
+                  <div style="margin-bottom: 8px;"><strong>Subject:</strong> PMC website approval</div>
+                  <div style="margin-bottom: 12px;"><strong>New User:</strong> ${registration.name} (${registration.email})</div>
+                  <div style="word-break: break-all; padding: 12px; background: var(--bg-white); border-radius: var(--radius); border: 1px solid var(--border);">
+                    <strong>Approval Link:</strong><br>
+                    <a href="${registration.approvalLink}" onclick="handleApprovalLinkClick(event, '${registration.approvalToken}')" style="color: var(--primary); word-break: break-all;">${registration.approvalLink}</a>
+                  </div>
+                </div>
+                <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                  <button class="btn btn-primary" onclick="window.open('${mailtoLink}'); closeEmailNotification();">
+                    <i class="fas fa-envelope"></i> Open Email Client
+                  </button>
+                  <button class="btn btn-secondary" onclick="copyApprovalLink('${registration.approvalLink}')">
+                    <i class="fas fa-copy"></i> Copy Approval Link
+                  </button>
+                  <button class="btn btn-secondary" onclick="copyEmailContent('${emailBody.replace(/'/g, "\\'")}')">
+                    <i class="fas fa-copy"></i> Copy Email Content
+                  </button>
+                  <button class="btn btn-secondary" onclick="closeEmailNotification()">
+                    Close
+                  </button>
+                </div>
+                <div style="margin-top: 16px; padding: 12px; background: #fff9e6; border-radius: var(--radius); font-size: 12px; color: var(--text-secondary);">
+                  <i class="fas fa-info-circle"></i> 
+                  <strong>Note:</strong> In a production environment, this email would be sent automatically. 
+                  For now, you can open your email client or copy the approval link to send manually.
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+        document.body.appendChild(modal);
+        modal.onclick = function(event) {
+          if (event.target.id === 'emailNotificationModal') {
+            closeEmailNotification();
+          }
+        };
+      }
+      
+      modal.classList.add('show');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeEmailNotification() {
+      const modal = document.getElementById('emailNotificationModal');
+      if (modal) {
+        modal.classList.remove('show');
+        document.body.style.overflow = '';
+      }
+    }
+
+    function copyApprovalLink(link) {
+      navigator.clipboard.writeText(link).then(() => {
+        showToast('Approval link copied to clipboard!');
+      }).catch(() => {
+        // Fallback for older browsers
+        const textarea = document.createElement('textarea');
+        textarea.value = link;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('Approval link copied to clipboard!');
+      });
+    }
+
+    function copyEmailContent(content) {
+      navigator.clipboard.writeText(content).then(() => {
+        showToast('Email content copied to clipboard!');
+      }).catch(() => {
+        const textarea = document.createElement('textarea');
+        textarea.value = content;
+        document.body.appendChild(textarea);
+        textarea.select();
+        document.execCommand('copy');
+        document.body.removeChild(textarea);
+        showToast('Email content copied to clipboard!');
+      });
+    }
+
+    function handleApprovalLinkClick(event, token) {
+      event.preventDefault();
+      approveRegistrationByToken(token);
+    }
+
+    function approveRegistrationByToken(token) {
+      const pending = JSON.parse(localStorage.getItem(PENDING_REGISTRATIONS_KEY)) || [];
+      const registration = pending.find(r => r.approvalToken === token);
+      
+      if (!registration) {
+        showToast('Invalid or expired approval link', 'error');
+        return;
+      }
+
+      // Check if username or email already exists
+      const users = JSON.parse(localStorage.getItem(USERS_DB_KEY)) || [];
+      const usernameExists = users.find(u => u.username.toLowerCase() === registration.username.toLowerCase());
+      const emailExists = users.find(u => u.email && u.email.toLowerCase() === registration.email.toLowerCase());
+      
+      if (usernameExists || emailExists) {
+        showToast('User already exists', 'error');
+        // Remove from pending
+        const filtered = pending.filter(r => r.id !== registration.id);
+        localStorage.setItem(PENDING_REGISTRATIONS_KEY, JSON.stringify(filtered));
+        return;
+      }
+
+      // Create approved user
+      const newUser = {
+        id: registration.id,
+        name: registration.name,
+        email: registration.email,
+        username: registration.username,
+        passwordHash: registration.passwordHash,
+        role: registration.role,
+        createdAt: registration.createdAt,
+        isActive: true,
+        approvedBy: 'admin@email',
+        approvedAt: new Date().toISOString()
+      };
+
+      users.push(newUser);
+      localStorage.setItem(USERS_DB_KEY, JSON.stringify(users));
+
+      // Remove from pending
+      const filtered = pending.filter(r => r.id !== registration.id);
+      localStorage.setItem(PENDING_REGISTRATIONS_KEY, JSON.stringify(filtered));
+
+      showToast(`Registration approved! User ${registration.name} can now login.`, 'success');
+      
+      // Close email notification if open
+      closeEmailNotification();
+      
+      // If admin panel is open, refresh it
+      if (document.getElementById('adminPanelModal').classList.contains('show')) {
+        renderPendingRegistrations();
+      }
+    }
+
+    // Check for approval link in URL on page load
+    function checkApprovalLink() {
+      const urlParams = new URLSearchParams(window.location.search);
+      const approvalToken = urlParams.get('approve');
+      
+      if (approvalToken) {
+        // Remove the parameter from URL
+        window.history.replaceState({}, document.title, window.location.pathname);
+        approveRegistrationByToken(approvalToken);
+      }
+    }
+
     function updateUserUI() {
       const userNameEl = document.getElementById('userName');
       const userRoleEl = document.getElementById('userRole');
+      const adminPanelBtn = document.getElementById('adminPanelBtn');
       
       if (currentUser) {
         userNameEl.textContent = currentUser.name;
         userRoleEl.textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
         userRoleEl.className = `user-role-badge ${currentUser.role}`;
+        
+        // Show admin panel button for admins
+        if (adminPanelBtn) {
+          adminPanelBtn.style.display = isAdmin() ? 'inline-flex' : 'none';
+        }
       } else {
         userNameEl.textContent = 'Guest';
         userRoleEl.textContent = 'User';
         userRoleEl.className = 'user-role-badge user';
+        
+        if (adminPanelBtn) {
+          adminPanelBtn.style.display = 'none';
+        }
       }
     }
 
@@ -5056,6 +5725,7 @@
     // Initialize
     function init() {
       initUser();
+      checkApprovalLink(); // Check for approval links in URL
       updateMetrics();
       renderSpaces();
       renderTasks();

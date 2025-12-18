@@ -1,0 +1,35 @@
+# Netlify Configuration
+[build]
+  # Since this is a static HTML site, no build command needed
+  publish = "."
+  command = ""
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Redirect rules for SPA (if needed)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
+
+# Testing environment configuration
+[context.testing]
+  command = ""
+  publish = "."
+
+# Production environment configuration
+[context.production]
+  command = ""
+  publish = "."
+
