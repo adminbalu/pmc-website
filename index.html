@@ -1,0 +1,5070 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hotel Project Management</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0073ea;
+      --primary-hover: #0060b8;
+      --success: #00c875;
+      --warning: #ffab00;
+      --danger: #f44336;
+      --info: #0086c0;
+      --bg: #f7f8fa;
+      --bg-white: #ffffff;
+      --border: #e4e7eb;
+      --text: #323338;
+      --text-secondary: #676879;
+      --text-light: #9d9fab;
+      --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.1);
+      --shadow-md: 0 2px 8px rgba(0, 0, 0, 0.1);
+      --shadow-lg: 0 4px 16px rgba(0, 0, 0, 0.12);
+      --radius: 8px;
+      --radius-lg: 12px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Header */
+    header {
+      background: var(--bg-white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .header-content {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+      gap: 24px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--primary), #0052cc);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+    }
+
+    .logo-text h1 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .logo-text p {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .header-stats {
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: var(--radius);
+      background: var(--bg);
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .user-role-badge {
+      padding: 2px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .user-role-badge.admin {
+      background: #ffebee;
+      color: #c62828;
+    }
+
+    .user-role-badge.manager {
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+
+    .user-role-badge.user {
+      background: #f5f5f5;
+      color: var(--text-secondary);
+    }
+
+    .meeting-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, #9c27b0, #7b1fa2);
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(156, 39, 176, 0.2);
+    }
+
+    .meeting-btn:hover {
+      background: linear-gradient(135deg, #8e24aa, #6a1b9a);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(156, 39, 176, 0.3);
+    }
+
+    .stat-item {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+    }
+
+    .stat-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .stat-label {
+      font-size: 11px;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Main Container */
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+      padding: 24px;
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    /* Sidebar - Spaces */
+    .spaces-sidebar {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      overflow: hidden;
+      position: sticky;
+      top: 88px;
+      max-height: calc(100vh - 112px);
+      display: flex;
+      flex-direction: column;
+    }
+
+    .sidebar-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-header h2 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .sidebar-header p {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .space-filters {
+      display: flex;
+      gap: 8px;
+      padding: 12px 20px;
+      border-bottom: 1px solid var(--border);
+      background: #fafbfc;
+    }
+
+    .filter-btn {
+      flex: 1;
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      background: var(--bg-white);
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .filter-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .filter-btn.active {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+    }
+
+    .spaces-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    .space-item {
+      padding: 12px;
+      border-radius: var(--radius);
+      margin-bottom: 8px;
+      cursor: pointer;
+      transition: all 0.2s;
+      border: 2px solid transparent;
+      background: var(--bg-white);
+    }
+
+    .space-item:hover {
+      background: #f7f8fa;
+      border-color: var(--border);
+    }
+
+    .space-item.active {
+      background: #e3f2fd;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 115, 234, 0.1);
+    }
+
+    .space-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .space-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .space-type {
+      font-size: 11px;
+      color: var(--text-light);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .space-stats {
+      display: flex;
+      gap: 12px;
+      font-size: 11px;
+      color: var(--text-secondary);
+      margin-top: 8px;
+    }
+
+    .space-progress {
+      width: 100%;
+      height: 4px;
+      background: var(--border);
+      border-radius: 2px;
+      overflow: hidden;
+      margin-top: 8px;
+    }
+
+    .space-progress-bar {
+      height: 100%;
+      background: var(--success);
+      transition: width 0.3s;
+    }
+
+    /* Main Content */
+    .main-content {
+      display: flex;
+      flex-direction: column;
+      gap: 24px;
+    }
+
+    /* Category Filter Menu */
+    .category-filter-bar {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 12px 16px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      position: relative;
+    }
+
+    .category-filter-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .workflow-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(135deg, var(--primary), #0052cc);
+      color: white;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+      font-weight: 500;
+      box-shadow: 0 2px 4px rgba(0, 115, 234, 0.2);
+    }
+
+    .workflow-btn:hover {
+      background: linear-gradient(135deg, var(--primary-hover), #0040a0);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0, 115, 234, 0.3);
+    }
+
+    .workflow-btn i {
+      font-size: 16px;
+    }
+
+    .burger-menu-btn {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-white);
+      cursor: pointer;
+      transition: all 0.2s;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+
+    .burger-menu-btn:hover {
+      background: var(--bg);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .burger-menu-btn i {
+      font-size: 16px;
+    }
+
+    .category-dropdown {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      min-width: 280px;
+      max-height: 400px;
+      overflow-y: auto;
+      z-index: 200;
+      display: none;
+      padding: 8px;
+    }
+
+    .category-dropdown.show {
+      display: block;
+    }
+
+    .category-item {
+      padding: 10px 12px;
+      border-radius: var(--radius);
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--text);
+    }
+
+    .category-item:hover {
+      background: var(--bg);
+    }
+
+    .category-item.active {
+      background: #e3f2fd;
+      color: var(--primary);
+      font-weight: 500;
+    }
+
+    .category-item i {
+      width: 20px;
+      text-align: center;
+      font-size: 16px;
+    }
+
+    .selected-category {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: var(--bg);
+      border-radius: var(--radius);
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .selected-category strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .content-header {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 24px;
+    }
+
+    .content-title {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .content-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 16px;
+    }
+
+    .header-badges {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .badge-due {
+      background: #fff4e5;
+      color: #b8860b;
+    }
+
+    .badge-overdue {
+      background: #ffebee;
+      color: var(--danger);
+    }
+
+    .badge-done {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    /* Add Task Form */
+    .add-task-form {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 20px;
+      display: grid;
+      grid-template-columns: 1fr 180px 140px 140px auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    select,
+    textarea {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--bg-white);
+      transition: all 0.2s;
+    }
+
+    input[type="text"]:focus,
+    input[type="date"]:focus,
+    select:focus,
+    textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 115, 234, 0.1);
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 60px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background: var(--primary-hover);
+    }
+
+    .btn-secondary {
+      background: var(--bg);
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+
+    .btn-secondary:hover {
+      background: #e4e7eb;
+    }
+
+    /* Tasks List */
+    .tasks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .task-card {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 20px;
+      transition: all 0.2s;
+    }
+
+    .task-card:hover {
+      box-shadow: var(--shadow-md);
+      border-color: #cbd2d9;
+    }
+
+    .task-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 16px;
+      gap: 16px;
+    }
+
+    .task-title-section {
+      flex: 1;
+    }
+
+    .task-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .task-meta {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .task-status {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-todo {
+      background: #f5f5f5;
+      color: var(--text-secondary);
+    }
+
+    .status-in-progress {
+      background: #fff4e5;
+      color: #b8860b;
+    }
+
+    .status-done {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .task-deadline {
+      font-size: 12px;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .task-deadline.overdue {
+      color: var(--danger);
+      font-weight: 500;
+    }
+
+    .task-deadline.due-today {
+      color: var(--warning);
+      font-weight: 500;
+    }
+
+    .task-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .btn-icon {
+      width: 32px;
+      height: 32px;
+      border: 1px solid var(--border);
+      background: var(--bg-white);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+
+    .btn-icon:hover {
+      background: var(--bg);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-icon.danger:hover {
+      background: #ffebee;
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .task-remarks {
+      margin-bottom: 16px;
+    }
+
+    .task-remarks textarea {
+      width: 100%;
+      font-size: 13px;
+    }
+
+    /* Subtasks */
+    .subtasks-section {
+      border-top: 1px solid var(--border);
+      padding-top: 16px;
+    }
+
+    .subtasks-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .subtasks-title {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .subtasks-count {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-weight: normal;
+    }
+
+    .subtasks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      margin-bottom: 12px;
+    }
+
+    .subtask-item {
+      display: grid;
+      grid-template-columns: 24px 1fr 140px 1fr auto;
+      gap: 12px;
+      align-items: center;
+      padding: 10px;
+      background: #fafbfc;
+      border-radius: var(--radius);
+      transition: background 0.2s;
+    }
+
+    .subtask-item:hover {
+      background: #f0f1f3;
+    }
+
+    .subtask-checkbox {
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--border);
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      background: var(--bg-white);
+    }
+
+    .subtask-checkbox.checked {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    .subtask-title {
+      font-size: 13px;
+      color: var(--text);
+    }
+
+    .subtask-title.completed {
+      text-decoration: line-through;
+      color: var(--text-light);
+    }
+
+    .subtask-deadline {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .subtask-remarks {
+      font-size: 12px;
+      color: var(--text-secondary);
+      font-style: italic;
+    }
+
+    .subtask-add-form {
+      display: grid;
+      grid-template-columns: 1fr 140px 1fr auto;
+      gap: 8px;
+      padding-top: 12px;
+      border-top: 1px dashed var(--border);
+    }
+
+    .subtask-add-form input {
+      font-size: 13px;
+    }
+
+    .btn-sm {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+
+    /* Empty State */
+    .empty-state {
+      text-align: center;
+      padding: 60px 24px;
+      color: var(--text-secondary);
+    }
+
+    .empty-state-icon {
+      font-size: 48px;
+      color: var(--text-light);
+      margin-bottom: 16px;
+    }
+
+    .empty-state h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .empty-state p {
+      font-size: 14px;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--text);
+      color: white;
+      padding: 12px 20px;
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s;
+      z-index: 1000;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast.success {
+      background: var(--success);
+    }
+
+    /* Workflow Modal */
+    .workflow-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+      backdrop-filter: blur(4px);
+    }
+
+    .workflow-modal.show {
+      display: flex;
+    }
+
+    .workflow-content {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      width: 95%;
+      max-width: 1600px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .workflow-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .workflow-header h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .workflow-close {
+      width: 36px;
+      height: 36px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+      transition: all 0.2s;
+    }
+
+    .workflow-close:hover {
+      background: var(--bg);
+      border-color: var(--danger);
+      color: var(--danger);
+    }
+
+    .workflow-body {
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      gap: 0;
+      overflow: hidden;
+      flex: 1;
+    }
+
+    .workflow-tree-container {
+      padding: 40px;
+      overflow-y: auto;
+      border-right: 1px solid var(--border);
+    }
+
+    .workflow-tasks-panel {
+      background: var(--bg);
+      padding: 24px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .workflow-tasks-header {
+      padding-bottom: 16px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .workflow-tasks-header h3 {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .workflow-tasks-header p {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .workflow-tasks-metrics {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .workflow-metric {
+      background: var(--bg-white);
+      padding: 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      text-align: center;
+    }
+
+    .workflow-metric-value {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .workflow-metric-label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .workflow-tasks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .workflow-task-item {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .workflow-task-item:hover {
+      border-color: var(--primary);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .workflow-task-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .workflow-task-meta {
+      display: flex;
+      gap: 12px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      flex-wrap: wrap;
+    }
+
+    .workflow-task-space {
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .workflow-empty-state {
+      text-align: center;
+      padding: 40px 20px;
+      color: var(--text-secondary);
+    }
+
+    .workflow-empty-state i {
+      font-size: 48px;
+      color: var(--text-light);
+      margin-bottom: 16px;
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.02); box-shadow: 0 0 0 4px rgba(0, 115, 234, 0.2); }
+    }
+
+    /* Login Modal */
+    .login-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 20000;
+      backdrop-filter: blur(4px);
+    }
+
+    .login-modal.show {
+      display: flex;
+    }
+
+    .login-content {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      width: 90%;
+      max-width: 400px;
+      padding: 32px;
+    }
+
+    .login-header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .login-header h2 {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+
+    .login-header p {
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .login-form input,
+    .login-form select {
+      padding: 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+    }
+
+    .login-form input:focus,
+    .login-form select:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 115, 234, 0.1);
+    }
+
+    .login-actions {
+      display: flex;
+      gap: 12px;
+      margin-top: 8px;
+    }
+
+    /* Meeting Minutes Modal */
+    .meeting-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 15000;
+      backdrop-filter: blur(4px);
+    }
+
+    .meeting-modal.show {
+      display: flex;
+    }
+
+    .meeting-content {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      width: 95%;
+      max-width: 1800px;
+      max-height: 90vh;
+      display: grid;
+      grid-template-columns: 1fr 400px;
+      overflow: hidden;
+    }
+
+    .meeting-content.with-todos {
+      grid-template-columns: 1fr 400px 350px;
+    }
+
+    .meeting-left {
+      display: flex;
+      flex-direction: column;
+      border-right: 1px solid var(--border);
+      position: relative;
+    }
+
+    .meeting-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .meeting-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .meeting-editor {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: var(--bg-white);
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    .meeting-textarea {
+        width: 100%;
+      min-height: 500px;
+      padding: 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+      font-family: inherit;
+      line-height: 1.6;
+      resize: none;
+      position: relative;
+    }
+
+    .meeting-textarea::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      pointer-events: none;
+    }
+
+    .meeting-textarea:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(0, 115, 234, 0.1);
+    }
+
+    .meeting-actions {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .meeting-entry {
+      margin-bottom: 0;
+      padding: 0;
+      background: transparent;
+      border: none;
+    }
+
+    .meeting-entry-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+      font-size: 11px;
+      color: var(--text-light);
+      padding: 2px 0;
+    }
+
+    .meeting-entry-user {
+      font-weight: 500;
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .meeting-entry-date {
+      color: var(--text-light);
+      font-size: 10px;
+    }
+
+    .meeting-entry-content {
+      font-size: 13px;
+      color: var(--text);
+      white-space: pre-wrap;
+      line-height: 1.8;
+      margin-bottom: 16px;
+      padding: 0;
+      background: transparent;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+    }
+
+    .meeting-entry-content-editable {
+      font-size: 13px;
+      color: var(--text);
+      line-height: 1.8;
+      margin-bottom: 16px;
+      padding: 8px;
+      background: var(--bg);
+      border-radius: var(--radius);
+      border: 1px solid transparent;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      min-height: 60px;
+      resize: vertical;
+      width: 100%;
+    }
+
+    .meeting-entry-content-editable:focus {
+      outline: none;
+      border-color: var(--primary);
+      background: var(--bg-white);
+    }
+
+    .meeting-entry-edit-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      padding: 4px 8px;
+      font-size: 11px;
+    }
+
+    .meeting-entry:hover .meeting-entry-edit-btn {
+      opacity: 1;
+    }
+
+    .meeting-entry {
+      position: relative;
+    }
+
+    .meeting-todo-item {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px;
+      margin-bottom: 8px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .meeting-todo-item:hover {
+      background: var(--bg);
+      border-color: var(--primary);
+    }
+
+    .meeting-todo-item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 4px;
+    }
+
+    .meeting-todo-item-date {
+      font-weight: 600;
+      color: var(--primary);
+      font-size: 11px;
+    }
+
+    .meeting-todo-item-content {
+      color: var(--text);
+      line-height: 1.5;
+    }
+
+    .meeting-todo-item-source {
+      font-size: 10px;
+      color: var(--text-light);
+      margin-top: 4px;
+    }
+
+    .meeting-entry-input {
+      width: 100%;
+      padding: 8px 0;
+      border: none;
+      border-bottom: 1px solid var(--border);
+      font-size: 13px;
+      font-family: 'Consolas', 'Monaco', 'Courier New', monospace;
+      resize: none;
+      min-height: 100px;
+      background: transparent;
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    .meeting-entry-input:focus {
+      outline: none;
+      border-bottom-color: var(--primary);
+    }
+
+    .meeting-entry-input::placeholder {
+      color: var(--text-light);
+      font-style: italic;
+    }
+
+    .meeting-entry-actions {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+      padding-top: 8px;
+      border-top: 1px solid var(--border);
+    }
+
+    .meeting-entry-new {
+      background: transparent;
+      border: none;
+    }
+
+    .date-picker-popup {
+      position: absolute;
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      padding: 16px;
+      z-index: 1000;
+      display: none;
+    }
+
+    .date-picker-popup.show {
+      display: block;
+    }
+
+    .date-picker-popup input[type="date"] {
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 14px;
+    }
+
+    .meeting-date-selector {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg-white);
+      padding: 8px 12px;
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow-sm);
+    }
+
+    .meeting-date-selector label {
+      font-size: 11px;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .meeting-date-selector input {
+      padding: 4px 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 12px;
+      width: 140px;
+    }
+
+    /* Todo Table View */
+    .todo-table-container {
+      background: var(--bg-white);
+      border-left: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    /* Todo List Modal */
+    .todo-list-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 15000;
+      backdrop-filter: blur(4px);
+    }
+
+    .todo-list-modal.show {
+      display: flex;
+    }
+
+    .todo-list-content {
+      background: var(--bg-white);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-lg);
+      width: 95%;
+      max-width: 1400px;
+      max-height: 90vh;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .todo-list-header {
+      padding: 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .todo-list-header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .todo-list-header h2 {
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .todo-list-filters {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .todo-filter-btn {
+      padding: 6px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-white);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all 0.2s;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .todo-filter-btn:hover {
+      background: var(--bg);
+      border-color: var(--primary);
+    }
+
+    .todo-filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    .todo-date-filter {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .todo-date-filter input {
+      padding: 6px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 12px;
+    }
+
+    .todo-list-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+    }
+
+    .todo-add-section {
+      margin-bottom: 16px;
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .todo-add-btn {
+      padding: 8px 16px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-white);
+      color: var(--text);
+      cursor: pointer;
+      font-size: 13px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .todo-add-btn:hover {
+      background: var(--bg);
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .todo-add-form {
+      background: var(--bg);
+      padding: 16px;
+      border-radius: var(--radius);
+      margin-bottom: 16px;
+      border: 1px solid var(--border);
+      display: none;
+    }
+
+    .todo-add-form.show {
+      display: block;
+    }
+
+    .todo-add-form-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+
+    .todo-list-table-wrapper {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: var(--bg-white);
+    }
+
+    .todo-list-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .todo-list-table thead {
+      background: var(--bg);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .todo-list-table th {
+      padding: 10px 8px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text);
+      border-bottom: 2px solid var(--border);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      white-space: nowrap;
+    }
+
+    .todo-list-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+      vertical-align: middle;
+    }
+
+    .todo-list-table tbody tr {
+      transition: background 0.2s;
+    }
+
+    .todo-list-table tbody tr:hover {
+      background: var(--bg);
+    }
+
+    .todo-list-table tbody tr.today-row {
+      background: #fff9e6;
+      border-left: 3px solid var(--warning);
+    }
+
+    .todo-list-table tbody tr.overdue-row {
+      background: #ffebee;
+      border-left: 3px solid var(--danger);
+    }
+
+    .todo-list-source {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .todo-list-source.task {
+      background: #e3f2fd;
+      color: #1565c0;
+    }
+
+    .todo-list-source.meeting {
+      background: #f3e5f5;
+      color: #7b1fa2;
+    }
+
+    .todo-list-source.manual {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    .todo-list-cell-compact {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 200px;
+    }
+
+    .meeting-day-todos {
+      background: var(--bg);
+      border-left: 1px solid var(--border);
+      display: flex;
+        flex-direction: column;
+      overflow: hidden;
+    }
+
+    .meeting-day-todos-header {
+      padding: 16px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-white);
+    }
+
+    .meeting-day-todos-header h3 {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .meeting-day-todos-header p {
+      font-size: 11px;
+      color: var(--text-secondary);
+    }
+
+    .meeting-day-todos-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px;
+    }
+
+    .meeting-day-todo-item {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 10px;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .meeting-day-todo-item-title {
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .meeting-day-todo-item-meta {
+      font-size: 11px;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .todo-table-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-white);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .todo-table-header h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .todo-table-wrapper {
+      flex: 1;
+      overflow: auto;
+      position: relative;
+    }
+
+    .todo-table {
+        width: 100%;
+      border-collapse: collapse;
+      font-size: 13px;
+    }
+
+    .todo-table thead {
+      position: sticky;
+      top: 0;
+      background: var(--bg-white);
+      z-index: 10;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .todo-table th {
+      padding: 12px 8px;
+      text-align: left;
+      font-weight: 600;
+      color: var(--text);
+      border-bottom: 2px solid var(--border);
+      background: var(--bg-white);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .todo-table td {
+      padding: 10px 8px;
+      border-bottom: 1px solid var(--border);
+      color: var(--text);
+    }
+
+    .todo-table tbody tr {
+      transition: background 0.2s;
+    }
+
+    .todo-table tbody tr:hover {
+      background: var(--bg);
+    }
+
+    .todo-table tbody tr.today-row {
+      background: #fff9e6;
+      border-left: 3px solid var(--warning);
+    }
+
+    .todo-table tbody tr.overdue-row {
+      background: #ffebee;
+      border-left: 3px solid var(--danger);
+    }
+
+    .todo-date-cell {
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .todo-task-cell {
+      max-width: 200px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .todo-space-cell {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .todo-status-cell {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 500;
+    }
+
+    .todo-remarks-cell {
+      max-width: 150px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .meeting-right {
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+    }
+
+    .meeting-tasks-header {
+      padding: 20px;
+      border-bottom: 1px solid var(--border);
+      background: var(--bg-white);
+    }
+
+    .meeting-tasks-header h3 {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .meeting-tasks-header p {
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+
+    .meeting-tasks-list {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    .meeting-date-link {
+      color: var(--primary);
+      text-decoration: underline;
+      cursor: pointer;
+      font-weight: 500;
+    }
+
+    .meeting-date-link:hover {
+      color: var(--primary-hover);
+    }
+
+    .meeting-task-item {
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 12px;
+      margin-bottom: 8px;
+    }
+
+    .meeting-task-title {
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+
+    .meeting-task-meta {
+      font-size: 11px;
+      color: var(--text-secondary);
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    /* Editable Room Name */
+    .space-name-editable {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .space-name-editable input {
+      border: none;
+      background: transparent;
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      padding: 2px 4px;
+      border-radius: 4px;
+      flex: 1;
+    }
+
+    .space-name-editable input:focus {
+      outline: 2px solid var(--primary);
+      background: var(--bg-white);
+    }
+
+    .space-edit-btn {
+      opacity: 0;
+      transition: opacity 0.2s;
+      cursor: pointer;
+      color: var(--text-light);
+      font-size: 12px;
+    }
+
+    .space-item:hover .space-edit-btn {
+      opacity: 1;
+    }
+
+    .space-edit-btn:hover {
+      color: var(--primary);
+    }
+
+    /* Flowchart Tree Structure */
+    .flowchart-container {
+      display: flex;
+        flex-direction: column;
+      align-items: center;
+      gap: 0;
+      position: relative;
+    }
+
+    .flowchart-level {
+      display: flex;
+      gap: 24px;
+      margin-bottom: 40px;
+      position: relative;
+      align-items: flex-start;
+    }
+
+    .flowchart-node {
+      background: var(--bg-white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius-lg);
+      padding: 16px 20px;
+      min-width: 180px;
+      text-align: center;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+
+    .flowchart-node:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+
+    .flowchart-node.selected {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 4px rgba(0, 115, 234, 0.1);
+      transform: translateY(-2px);
+    }
+
+    .flowchart-node-status {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      display: flex;
+      gap: 4px;
+    }
+
+    .node-status-btn {
+      width: 24px;
+      height: 24px;
+      border: 1px solid var(--border);
+      border-radius: 4px;
+      background: var(--bg-white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .node-status-btn:hover {
+      border-color: var(--primary);
+      background: var(--bg);
+    }
+
+    .node-status-btn.todo {
+      background: #f5f5f5;
+      border-color: #9e9e9e;
+    }
+
+    .node-status-btn.in-progress {
+      background: #fff4e5;
+      border-color: #ff9800;
+      color: #b8860b;
+    }
+
+    .node-status-btn.done {
+      background: #e8f5e9;
+      border-color: #4caf50;
+      color: #2e7d32;
+    }
+
+    .node-status-btn.done::after {
+      content: '✓';
+      font-weight: bold;
+    }
+
+    .node-status-dropdown {
+      position: absolute;
+      top: 28px;
+      left: 0;
+      background: var(--bg-white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-md);
+      z-index: 10;
+      display: none;
+      min-width: 140px;
+      overflow: hidden;
+    }
+
+    .node-status-dropdown.show {
+      display: block;
+    }
+
+    .node-status-option {
+      padding: 8px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .node-status-option:hover {
+      background: var(--bg);
+    }
+
+    .node-status-option.todo {
+      color: var(--text-secondary);
+    }
+
+    .node-status-option.in-progress {
+      color: #b8860b;
+    }
+
+    .node-status-option.done {
+      color: #2e7d32;
+    }
+
+    .flowchart-node.phase-1 {
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+      border-color: #ff9800;
+    }
+
+    .flowchart-node.phase-2 {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb);
+      border-color: #2196f3;
+    }
+
+    .flowchart-node.phase-3 {
+      background: linear-gradient(135deg, #f3e5f5, #e1bee7);
+      border-color: #9c27b0;
+    }
+
+    .flowchart-node.phase-4 {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+      border-color: #4caf50;
+    }
+
+    .flowchart-node.phase-5 {
+      background: linear-gradient(135deg, #fff9c4, #fff59d);
+      border-color: #fbc02d;
+    }
+
+    .flowchart-node.phase-6 {
+      background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+      border-color: #e91e63;
+    }
+
+    /* Status-based colors override phase colors */
+    .flowchart-node.status-todo {
+      background: linear-gradient(135deg, #e3f2fd, #bbdefb) !important;
+      border-color: #64b5f6 !important;
+    }
+
+    .flowchart-node.status-in-progress {
+      background: linear-gradient(135deg, #fff3e0, #ffe0b2) !important;
+      border-color: #ff9800 !important;
+    }
+
+    .flowchart-node.status-done {
+      background: linear-gradient(135deg, #e8f5e9, #c8e6c9) !important;
+      border-color: #4caf50 !important;
+    }
+
+    .flowchart-node-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+      display: block;
+    }
+
+    .flowchart-node-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .flowchart-node-desc {
+      font-size: 12px;
+      color: var(--text-secondary);
+      line-height: 1.4;
+    }
+
+    .flowchart-node-phase {
+      position: absolute;
+      top: -12px;
+      right: 12px;
+      background: var(--text);
+      color: white;
+      font-size: 10px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    /* Connecting Lines */
+    .flowchart-connector {
+      position: absolute;
+      width: 2px;
+      background: var(--border);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .flowchart-connector.vertical {
+      height: 40px;
+      top: 100%;
+    }
+
+    .flowchart-connector.horizontal {
+      width: 24px;
+      height: 2px;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    /* Single Node (Root) */
+    .flowchart-single {
+      margin-bottom: 40px;
+    }
+
+    /* Two Nodes */
+    .flowchart-two {
+      display: flex;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    /* Multiple Nodes */
+    .flowchart-multiple {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+
+    /* Arrow Down */
+    .flowchart-arrow {
+      text-align: center;
+      color: var(--text-light);
+      font-size: 24px;
+      margin: -20px 0 -20px 0;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Responsive Flowchart */
+    @media (max-width: 1024px) {
+      .workflow-body {
+        grid-template-columns: 1fr;
+      }
+
+      .workflow-tree-container {
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+      }
+    }
+
+    @media (max-width: 768px) {
+      .workflow-content {
+        width: 95%;
+        max-height: 95vh;
+      }
+
+      .workflow-tree-container {
+        padding: 20px;
+      }
+
+      .flowchart-node {
+        min-width: 140px;
+        padding: 12px 16px;
+      }
+
+      .flowchart-two,
+      .flowchart-multiple {
+        flex-direction: column;
+      align-items: center;
+      }
+    }
+
+    /* Responsive */
+    @media (max-width: 1024px) {
+      .container {
+        grid-template-columns: 1fr;
+      }
+
+      .spaces-sidebar {
+        position: static;
+        max-height: none;
+      }
+
+      .add-task-form {
+        grid-template-columns: 1fr;
+      }
+
+      .subtask-item {
+        grid-template-columns: 24px 1fr auto;
+      }
+
+      .subtask-item .subtask-deadline,
+      .subtask-item .subtask-remarks {
+        display: none;
+      }
+
+      .subtask-add-form {
+        grid-template-columns: 1fr auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-content">
+      <div class="logo">
+        <div class="logo-icon">
+          <i class="fas fa-building"></i>
+      </div>
+        <div class="logo-text">
+          <h1>Hotel Project Management</h1>
+          <p>10 Rooms · 2 Restaurants · Public Areas</p>
+      </div>
+      </div>
+      <div style="display: flex; align-items: center; gap: 24px;">
+        <div class="header-stats">
+          <div class="stat-item">
+            <div class="stat-value" id="statSpaces">13</div>
+            <div class="stat-label">Spaces</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="statTasks">0</div>
+            <div class="stat-label">Tasks</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-value" id="statCompletion">0%</div>
+            <div class="stat-label">Complete</div>
+      </div>
+      </div>
+      <div class="header-actions">
+          <button class="meeting-btn" onclick="showMeetingMinutes()">
+            <i class="fas fa-sticky-note"></i>
+            <span>Meeting Minutes</span>
+        </button>
+          <button class="meeting-btn" onclick="showTodoList()" style="background: linear-gradient(135deg, #00c875, #00a862);">
+            <i class="fas fa-tasks"></i>
+            <span>To Do List</span>
+          </button>
+          <div class="user-info" id="userInfo">
+            <i class="fas fa-user-circle"></i>
+            <span id="userName">Guest</span>
+            <span class="user-role-badge user" id="userRole">User</span>
+          </div>
+          <button class="btn-icon" onclick="showLoginModal()" title="Login/Logout">
+            <i class="fas fa-sign-in-alt"></i>
+          </button>
+        </div>
+      </div>
+      </div>
+  </header>
+
+  <div class="container">
+    <!-- Sidebar -->
+    <aside class="spaces-sidebar">
+      <div class="sidebar-header">
+        <h2>Rooms & Spaces</h2>
+        <p>Select a space to manage tasks</p>
+        </div>
+      <div class="space-filters">
+        <button class="filter-btn active" onclick="setFilter('all')">All</button>
+        <button class="filter-btn" onclick="setFilter('room')">Rooms</button>
+        <button class="filter-btn" onclick="setFilter('restaurant')">Restaurants</button>
+        <button class="filter-btn" onclick="setFilter('public')">Public</button>
+      </div>
+      <div class="spaces-list" id="spacesList"></div>
+    </aside>
+
+  <!-- Main Content -->
+    <main class="main-content">
+      <div class="content-header">
+        <h2 class="content-title" id="currentSpaceTitle">Select a Space</h2>
+        <p class="content-subtitle" id="currentSpaceSubtitle">Choose a room, restaurant, or public area to get started</p>
+        <div class="header-badges">
+          <div class="badge badge-due">
+            <i class="fas fa-calendar-day"></i>
+            Due Today: <strong id="badgeDueToday">0</strong>
+      </div>
+          <div class="badge badge-overdue">
+            <i class="fas fa-exclamation-triangle"></i>
+            Overdue: <strong id="badgeOverdue">0</strong>
+        </div>
+          <div class="badge badge-done">
+            <i class="fas fa-check-circle"></i>
+            Completed: <strong id="badgeDone">0</strong>
+            </div>
+              </div>
+        </div>
+
+      <!-- Category Filter Menu -->
+      <div class="category-filter-bar">
+        <div class="category-filter-left">
+          <button class="burger-menu-btn" onclick="toggleCategoryMenu()">
+            <i class="fas fa-bars"></i>
+            <span>Work Categories</span>
+      </button>
+          <div class="selected-category" id="selectedCategory">
+            <i class="fas fa-filter"></i>
+            <span>Showing: <strong id="categoryName">All Categories</strong></span>
+      </div>
+          <div class="category-dropdown" id="categoryDropdown">
+          <div class="category-item" onclick="selectCategory('all')">
+            <i class="fas fa-th"></i>
+            <span>All Categories</span>
+        </div>
+          <div class="category-item" onclick="selectCategory('civil')">
+            <i class="fas fa-hard-hat"></i>
+            <span>Civil</span>
+            </div>
+          <div class="category-item" onclick="selectCategory('electrical')">
+            <i class="fas fa-bolt"></i>
+            <span>Electrical</span>
+              </div>
+          <div class="category-item" onclick="selectCategory('plumbing')">
+            <i class="fas fa-faucet"></i>
+            <span>Plumbing</span>
+          </div>
+          <div class="category-item" onclick="selectCategory('hvac')">
+            <i class="fas fa-wind"></i>
+            <span>HVAC</span>
+          </div>
+          <div class="category-item" onclick="selectCategory('flooring')">
+            <i class="fas fa-square"></i>
+            <span>Flooring</span>
+          </div>
+          <div class="category-item" onclick="selectCategory('ceiling')">
+            <i class="fas fa-layer-group"></i>
+            <span>Ceiling</span>
+          </div>
+          <div class="category-item" onclick="selectCategory('painting')">
+            <i class="fas fa-paint-roller"></i>
+            <span>Painting</span>
+          </div>
+          <div class="category-item" onclick="selectCategory('joinery')">
+            <i class="fas fa-hammer"></i>
+            <span>Joinery</span>
+          </div>
+          <div class="category-item" onclick="selectCategory('tiles')">
+            <i class="fas fa-th-large"></i>
+            <span>Tiles</span>
+          </div>
+          <div class="category-item" onclick="selectCategory('fixtures')">
+            <i class="fas fa-lightbulb"></i>
+            <span>Fixtures & Fittings</span>
+          </div>
+          <div class="category-item" onclick="selectCategory('finishes')">
+            <i class="fas fa-palette"></i>
+            <span>Finishes</span>
+          </div>
+          <div class="category-item" onclick="selectCategory('mep')">
+            <i class="fas fa-cogs"></i>
+            <span>MEP</span>
+          </div>
+          <div class="category-item" onclick="selectCategory('other')">
+            <i class="fas fa-ellipsis-h"></i>
+            <span>Other</span>
+          </div>
+        </div>
+        </div>
+        <div style="display: flex; gap: 12px;">
+          <button class="btn btn-secondary" onclick="toggleAddTaskForm()" id="addTaskBtn">
+            <i class="fas fa-plus"></i>
+            <span>Add Task</span>
+          </button>
+          <button class="workflow-btn" onclick="showWorkflow()">
+            <i class="fas fa-project-diagram"></i>
+            <span>Workflow</span>
+          </button>
+        </div>
+        </div>
+
+      <form class="add-task-form" id="addTaskForm" onsubmit="handleAddTask(event)" style="display: none;">
+        <div class="form-group">
+          <label class="form-label">Task Title</label>
+          <input type="text" id="taskTitle" placeholder="e.g. MEP Rough-in, Ceiling Installation" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Category</label>
+          <select id="taskCategory" required>
+            <option value="">Select Category</option>
+            <option value="civil">Civil</option>
+            <option value="electrical">Electrical</option>
+            <option value="plumbing">Plumbing</option>
+            <option value="hvac">HVAC</option>
+            <option value="flooring">Flooring</option>
+            <option value="ceiling">Ceiling</option>
+            <option value="painting">Painting</option>
+            <option value="joinery">Joinery</option>
+            <option value="tiles">Tiles</option>
+            <option value="fixtures">Fixtures & Fittings</option>
+            <option value="finishes">Finishes</option>
+            <option value="mep">MEP</option>
+            <option value="other">Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Deadline</label>
+          <input type="date" id="taskDeadline" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assigned To</label>
+          <input type="text" id="taskAssignedTo" placeholder="Name or team" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Status</label>
+          <select id="taskStatus">
+            <option value="todo">Todo</option>
+            <option value="in-progress">In Progress</option>
+            <option value="done">Done</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">&nbsp;</label>
+          <button type="submit" class="btn btn-primary">
+            <i class="fas fa-plus"></i> Add Task
+          </button>
+        </div>
+      </form>
+
+      <div class="tasks-list" id="tasksList">
+        <div class="empty-state">
+          <div class="empty-state-icon">
+            <i class="fas fa-tasks"></i>
+      </div>
+          <h3>No tasks yet</h3>
+          <p>Select a space and add your first task to get started</p>
+        </div>
+      </div>
+    </main>
+              </div>
+
+  <div class="toast" id="toast">
+    <i class="fas fa-check-circle"></i>
+    <span id="toastMessage">Saved</span>
+  </div>
+
+  <!-- Login Modal -->
+  <div class="login-modal" id="loginModal" onclick="closeLoginOnOverlay(event)">
+    <div class="login-content" onclick="event.stopPropagation()">
+      <div class="login-header">
+        <h2><i class="fas fa-user-circle"></i> User Login</h2>
+        <p>Select your role to access the system</p>
+      </div>
+      <div class="login-form">
+        <input type="text" id="loginName" placeholder="Your Name" required />
+        <select id="loginRole" required>
+          <option value="">Select Role</option>
+          <option value="admin">Admin</option>
+          <option value="manager">Manager</option>
+          <option value="user">User</option>
+        </select>
+        <div class="login-actions">
+          <button class="btn btn-primary" onclick="handleLogin()" style="flex: 1;">
+            <i class="fas fa-sign-in-alt"></i> Login
+          </button>
+          <button class="btn btn-secondary" onclick="handleLogout()">
+            <i class="fas fa-sign-out-alt"></i> Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Meeting Minutes Modal -->
+  <div class="meeting-modal" id="meetingModal" onclick="closeMeetingOnOverlay(event)">
+    <div class="meeting-content" onclick="event.stopPropagation()">
+      <div class="meeting-left">
+        <div class="meeting-header">
+          <h2>
+            <i class="fas fa-sticky-note"></i>
+            Daily Standup Meeting Minutes
+          </h2>
+          <button class="workflow-close" onclick="closeMeetingMinutes()">
+        <i class="fas fa-times"></i>
+      </button>
+      </div>
+        <div class="meeting-editor">
+          <div class="meeting-date-selector">
+            <label>Date:</label>
+            <input type="date" id="meetingViewDate" onchange="loadMeetingForDate()" />
+        </div>
+          <div id="meetingEntriesContainer" style="max-height: calc(90vh - 200px); overflow-y: auto; padding-right: 8px;">
+            <!-- Meeting entries will be rendered here with inline input -->
+            </div>
+          <div id="meetingDatesList" style="margin-top: 16px; padding: 12px; border-top: 1px solid var(--border); display: none; background: var(--bg); border-radius: var(--radius);">
+            <div style="font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px;">Dates Found:</div>
+            <div id="meetingDatesButtons" style="display: flex; flex-wrap: wrap; gap: 8px;"></div>
+              </div>
+          <div id="datePickerPopup" class="date-picker-popup">
+            <div style="margin-bottom: 8px; font-size: 12px; font-weight: 600;">Select Date:</div>
+            <input type="date" id="datePickerInput" onchange="insertDateFromPicker()" />
+            <button class="btn btn-secondary btn-sm" onclick="closeDatePicker()" style="margin-top: 8px; padding: 4px 8px; font-size: 11px;">Cancel</button>
+              </div>
+        </div>
+        <div class="meeting-actions">
+          <div>
+            <button class="btn btn-secondary" onclick="loadTodayMeeting()">
+              <i class="fas fa-calendar-day"></i> Today
+      </button>
+          </div>
+        </div>
+      </div>
+      <div class="meeting-right">
+        <div class="meeting-tasks-header">
+          <h3 id="meetingTasksTitle">Select a Date</h3>
+          <p id="meetingTasksDesc">Click on a date link in the notes to view tasks</p>
+        </div>
+        <div class="meeting-tasks-list" id="meetingTasksList">
+          <div class="workflow-empty-state">
+            <i class="fas fa-calendar-alt"></i>
+            <p>Click on a date in the meeting notes to see tasks due on that date</p>
+          </div>
+                  </div>
+                </div>
+
+      <!-- Day's To Do Tasks -->
+      <div class="meeting-day-todos" id="meetingDayTodos">
+        <div class="meeting-day-todos-header">
+          <h3>
+            <i class="fas fa-tasks"></i>
+            To Do for Selected Date
+          </h3>
+          <p id="meetingDayTodosDate">Select a date to view tasks</p>
+        </div>
+        <div class="meeting-day-todos-list" id="meetingDayTodosList">
+          <div class="workflow-empty-state">
+            <i class="fas fa-calendar-alt"></i>
+            <p>Select a date to see tasks</p>
+          </div>
+        </div>
+      </div>
+    </div>
+              </div>
+
+  <!-- Todo List Modal -->
+  <div class="todo-list-modal" id="todoListModal" onclick="closeTodoListOnOverlay(event)">
+    <div class="todo-list-content" onclick="event.stopPropagation()">
+      <div class="todo-list-header">
+        <div class="todo-list-header-top">
+          <h2>
+            <i class="fas fa-tasks"></i>
+            Complete To Do List
+          </h2>
+          <button class="workflow-close" onclick="closeTodoList()">
+            <i class="fas fa-times"></i>
+          </button>
+      </div>
+        <div class="todo-list-filters">
+          <button class="todo-filter-btn active" id="filterAll" onclick="setTodoFilter('all')">
+            <i class="fas fa-list"></i> All
+          </button>
+          <button class="todo-filter-btn" id="filterToday" onclick="setTodoFilter('today')">
+            <i class="fas fa-calendar-day"></i> Today
+          </button>
+          <button class="todo-filter-btn" id="filterTomorrow" onclick="setTodoFilter('tomorrow')">
+            <i class="fas fa-calendar-alt"></i> Tomorrow
+          </button>
+          <button class="todo-filter-btn" id="filterOverdue" onclick="setTodoFilter('overdue')">
+            <i class="fas fa-exclamation-triangle"></i> Overdue
+          </button>
+          <div class="todo-date-filter">
+            <label style="font-size: 12px; color: var(--text-secondary);">Date:</label>
+            <input type="date" id="todoDateFilter" onchange="handleDateFilterChange()" placeholder="Select date" />
+          </div>
+        </div>
+      </div>
+      <div class="todo-list-body">
+        <div class="todo-add-section">
+          <button class="todo-add-btn" onclick="toggleAddTodoForm()">
+            <i class="fas fa-plus"></i>
+            Add To Do Item
+          </button>
+        </div>
+        <div class="todo-add-form" id="addTodoForm">
+          <div class="todo-add-form-grid">
+            <div class="form-group">
+              <label class="form-label">To Do Item</label>
+              <input type="text" id="manualTodoTitle" placeholder="Enter to do item..." />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Due Date</label>
+              <input type="date" id="manualTodoDate" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Assigned To</label>
+              <input type="text" id="manualTodoAssigned" placeholder="Name" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">&nbsp;</label>
+              <div style="display: flex; gap: 8px;">
+                <button class="btn btn-primary" onclick="addManualTodo()">
+                  <i class="fas fa-plus"></i> Add
+                </button>
+                <button class="btn btn-secondary" onclick="toggleAddTodoForm()">
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="todo-list-table-wrapper">
+          <table class="todo-list-table" id="todoListTable">
+            <thead>
+              <tr>
+                <th style="width: 100px;">Date</th>
+                <th style="width: 250px;">To Do Item</th>
+                <th style="width: 100px;">Source</th>
+                <th style="width: 120px;">Space</th>
+                <th style="width: 100px;">Category</th>
+                <th style="width: 100px;">Status</th>
+                <th style="width: 120px;">Assigned To</th>
+                <th style="width: 200px;">Remarks</th>
+                <th style="width: 60px;">Action</th>
+              </tr>
+            </thead>
+            <tbody id="todoListTableBody">
+              <!-- Auto-compiled todos will be rendered here -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Workflow Modal -->
+  <div class="workflow-modal" id="workflowModal" onclick="closeWorkflowOnOverlay(event)">
+    <div class="workflow-content" onclick="event.stopPropagation()">
+      <div class="workflow-header">
+        <h2>
+          <i class="fas fa-project-diagram"></i>
+          Construction Workflow Sequence
+        </h2>
+        <button class="workflow-close" onclick="closeWorkflow()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+      <div class="workflow-body">
+        <div class="workflow-tree-container">
+          <div class="flowchart-container">
+            <!-- Phase 1: Site Preparation -->
+            <div class="flowchart-single">
+              <div class="flowchart-node phase-1" data-category="other" onclick="selectWorkflowNode('other', this, event)">
+                <div class="flowchart-node-status">
+                  <div class="node-status-btn todo" onclick="toggleNodeStatus(this, event)" data-category="other"></div>
+                  <div class="node-status-dropdown">
+                    <div class="node-status-option todo" onclick="setNodeStatus('other', 'todo', this)">Todo</div>
+                    <div class="node-status-option in-progress" onclick="setNodeStatus('other', 'in-progress', this)">In Progress</div>
+                    <div class="node-status-option done" onclick="setNodeStatus('other', 'done', this)">Done</div>
+                  </div>
+                </div>
+                <span class="flowchart-node-phase">Phase 1</span>
+                <i class="fas fa-hard-hat flowchart-node-icon" style="color: #ff9800;"></i>
+                <div class="flowchart-node-title">Site Preparation</div>
+                <div class="flowchart-node-desc">Demolition, Site Clearing, Layout</div>
+              </div>
+            </div>
+            <div class="flowchart-arrow">↓</div>
+
+            <!-- Phase 2: Civil Works -->
+            <div class="flowchart-single">
+              <div class="flowchart-node phase-2" data-category="civil" onclick="selectWorkflowNode('civil', this, event)">
+                <div class="flowchart-node-status">
+                  <div class="node-status-btn todo" onclick="toggleNodeStatus(this, event)" data-category="civil"></div>
+                  <div class="node-status-dropdown">
+                    <div class="node-status-option todo" onclick="setNodeStatus('civil', 'todo', this)">Todo</div>
+                    <div class="node-status-option in-progress" onclick="setNodeStatus('civil', 'in-progress', this)">In Progress</div>
+                    <div class="node-status-option done" onclick="setNodeStatus('civil', 'done', this)">Done</div>
+      </div>
+                </div>
+                <span class="flowchart-node-phase">Phase 2</span>
+                <i class="fas fa-building flowchart-node-icon" style="color: #2196f3;"></i>
+                <div class="flowchart-node-title">Civil Works</div>
+                <div class="flowchart-node-desc">Foundations, Structure, Walls, Partitions</div>
+              </div>
+            </div>
+            <div class="flowchart-arrow">↓</div>
+
+            <!-- Phase 3: MEP Rough-in -->
+            <div class="flowchart-multiple">
+              <div class="flowchart-node phase-3" data-category="electrical" onclick="selectWorkflowNode('electrical', this, event)">
+                <div class="flowchart-node-status">
+                  <div class="node-status-btn todo" onclick="toggleNodeStatus(this, event)" data-category="electrical"></div>
+                  <div class="node-status-dropdown">
+                    <div class="node-status-option todo" onclick="setNodeStatus('electrical', 'todo', this)">Todo</div>
+                    <div class="node-status-option in-progress" onclick="setNodeStatus('electrical', 'in-progress', this)">In Progress</div>
+                    <div class="node-status-option done" onclick="setNodeStatus('electrical', 'done', this)">Done</div>
+                  </div>
+                </div>
+                <span class="flowchart-node-phase">Phase 3</span>
+                <i class="fas fa-bolt flowchart-node-icon" style="color: #9c27b0;"></i>
+                <div class="flowchart-node-title">Electrical</div>
+                <div class="flowchart-node-desc">Rough Wiring, Conduits, Panels</div>
+              </div>
+              <div class="flowchart-node phase-3" data-category="plumbing" onclick="selectWorkflowNode('plumbing', this, event)">
+                <div class="flowchart-node-status">
+                  <div class="node-status-btn todo" onclick="toggleNodeStatus(this, event)" data-category="plumbing"></div>
+                  <div class="node-status-dropdown">
+                    <div class="node-status-option todo" onclick="setNodeStatus('plumbing', 'todo', this)">Todo</div>
+                    <div class="node-status-option in-progress" onclick="setNodeStatus('plumbing', 'in-progress', this)">In Progress</div>
+                    <div class="node-status-option done" onclick="setNodeStatus('plumbing', 'done', this)">Done</div>
+                  </div>
+                </div>
+                <span class="flowchart-node-phase">Phase 3</span>
+                <i class="fas fa-faucet flowchart-node-icon" style="color: #9c27b0;"></i>
+                <div class="flowchart-node-title">Plumbing</div>
+                <div class="flowchart-node-desc">Pipes, Drains, Water Lines</div>
+              </div>
+              <div class="flowchart-node phase-3" data-category="hvac" onclick="selectWorkflowNode('hvac', this, event)">
+                <div class="flowchart-node-status">
+                  <div class="node-status-btn todo" onclick="toggleNodeStatus(this, event)" data-category="hvac"></div>
+                  <div class="node-status-dropdown">
+                    <div class="node-status-option todo" onclick="setNodeStatus('hvac', 'todo', this)">Todo</div>
+                    <div class="node-status-option in-progress" onclick="setNodeStatus('hvac', 'in-progress', this)">In Progress</div>
+                    <div class="node-status-option done" onclick="setNodeStatus('hvac', 'done', this)">Done</div>
+                  </div>
+                </div>
+                <span class="flowchart-node-phase">Phase 3</span>
+                <i class="fas fa-wind flowchart-node-icon" style="color: #9c27b0;"></i>
+                <div class="flowchart-node-title">HVAC</div>
+                <div class="flowchart-node-desc">Ducts, Vents, AC Units</div>
+              </div>
+            </div>
+            <div class="flowchart-arrow">↓</div>
+
+            <!-- Phase 4: Ceiling & Flooring -->
+            <div class="flowchart-two">
+              <div class="flowchart-node phase-4" data-category="ceiling" onclick="selectWorkflowNode('ceiling', this, event)">
+                <div class="flowchart-node-status">
+                  <div class="node-status-btn todo" onclick="toggleNodeStatus(this, event)" data-category="ceiling"></div>
+                  <div class="node-status-dropdown">
+                    <div class="node-status-option todo" onclick="setNodeStatus('ceiling', 'todo', this)">Todo</div>
+                    <div class="node-status-option in-progress" onclick="setNodeStatus('ceiling', 'in-progress', this)">In Progress</div>
+                    <div class="node-status-option done" onclick="setNodeStatus('ceiling', 'done', this)">Done</div>
+                  </div>
+                </div>
+                <span class="flowchart-node-phase">Phase 4</span>
+                <i class="fas fa-layer-group flowchart-node-icon" style="color: #4caf50;"></i>
+                <div class="flowchart-node-title">Ceiling</div>
+                <div class="flowchart-node-desc">Grid, Tiles, False Ceiling</div>
+              </div>
+              <div class="flowchart-node phase-4" data-category="flooring" onclick="selectWorkflowNode('flooring', this, event)">
+                <div class="flowchart-node-status">
+                  <div class="node-status-btn todo" onclick="toggleNodeStatus(this, event)" data-category="flooring"></div>
+                  <div class="node-status-dropdown">
+                    <div class="node-status-option todo" onclick="setNodeStatus('flooring', 'todo', this)">Todo</div>
+                    <div class="node-status-option in-progress" onclick="setNodeStatus('flooring', 'in-progress', this)">In Progress</div>
+                    <div class="node-status-option done" onclick="setNodeStatus('flooring', 'done', this)">Done</div>
+                  </div>
+                </div>
+                <span class="flowchart-node-phase">Phase 4</span>
+                <i class="fas fa-square flowchart-node-icon" style="color: #4caf50;"></i>
+                <div class="flowchart-node-title">Flooring</div>
+                <div class="flowchart-node-desc">Screed, Base Layer</div>
+              </div>
+            </div>
+            <div class="flowchart-arrow">↓</div>
+
+            <!-- Phase 5: Tiles & Painting -->
+            <div class="flowchart-two">
+              <div class="flowchart-node phase-5" data-category="tiles" onclick="selectWorkflowNode('tiles', this, event)">
+                <div class="flowchart-node-status">
+                  <div class="node-status-btn todo" onclick="toggleNodeStatus(this, event)" data-category="tiles"></div>
+                  <div class="node-status-dropdown">
+                    <div class="node-status-option todo" onclick="setNodeStatus('tiles', 'todo', this)">Todo</div>
+                    <div class="node-status-option in-progress" onclick="setNodeStatus('tiles', 'in-progress', this)">In Progress</div>
+                    <div class="node-status-option done" onclick="setNodeStatus('tiles', 'done', this)">Done</div>
+                  </div>
+                </div>
+                <span class="flowchart-node-phase">Phase 5</span>
+                <i class="fas fa-th-large flowchart-node-icon" style="color: #fbc02d;"></i>
+                <div class="flowchart-node-title">Tiles</div>
+                <div class="flowchart-node-desc">Bathroom, Kitchen, Floor Tiles</div>
+              </div>
+              <div class="flowchart-node phase-5" data-category="painting" onclick="selectWorkflowNode('painting', this, event)">
+                <div class="flowchart-node-status">
+                  <div class="node-status-btn todo" onclick="toggleNodeStatus(this, event)" data-category="painting"></div>
+                  <div class="node-status-dropdown">
+                    <div class="node-status-option todo" onclick="setNodeStatus('painting', 'todo', this)">Todo</div>
+                    <div class="node-status-option in-progress" onclick="setNodeStatus('painting', 'in-progress', this)">In Progress</div>
+                    <div class="node-status-option done" onclick="setNodeStatus('painting', 'done', this)">Done</div>
+                  </div>
+                </div>
+                <span class="flowchart-node-phase">Phase 5</span>
+                <i class="fas fa-paint-roller flowchart-node-icon" style="color: #fbc02d;"></i>
+                <div class="flowchart-node-title">Painting</div>
+                <div class="flowchart-node-desc">Primer, Base, Top Coat</div>
+              </div>
+            </div>
+            <div class="flowchart-arrow">↓</div>
+
+            <!-- Phase 6: Joinery & Finishes -->
+            <div class="flowchart-multiple">
+              <div class="flowchart-node phase-6" data-category="joinery" onclick="selectWorkflowNode('joinery', this, event)">
+                <div class="flowchart-node-status">
+                  <div class="node-status-btn todo" onclick="toggleNodeStatus(this, event)" data-category="joinery"></div>
+                  <div class="node-status-dropdown">
+                    <div class="node-status-option todo" onclick="setNodeStatus('joinery', 'todo', this)">Todo</div>
+                    <div class="node-status-option in-progress" onclick="setNodeStatus('joinery', 'in-progress', this)">In Progress</div>
+                    <div class="node-status-option done" onclick="setNodeStatus('joinery', 'done', this)">Done</div>
+                  </div>
+                </div>
+                <span class="flowchart-node-phase">Phase 6</span>
+                <i class="fas fa-hammer flowchart-node-icon" style="color: #e91e63;"></i>
+                <div class="flowchart-node-title">Joinery</div>
+                <div class="flowchart-node-desc">Doors, Windows, Wardrobes</div>
+              </div>
+              <div class="flowchart-node phase-6" data-category="fixtures" onclick="selectWorkflowNode('fixtures', this, event)">
+                <div class="flowchart-node-status">
+                  <div class="node-status-btn todo" onclick="toggleNodeStatus(this, event)" data-category="fixtures"></div>
+                  <div class="node-status-dropdown">
+                    <div class="node-status-option todo" onclick="setNodeStatus('fixtures', 'todo', this)">Todo</div>
+                    <div class="node-status-option in-progress" onclick="setNodeStatus('fixtures', 'in-progress', this)">In Progress</div>
+                    <div class="node-status-option done" onclick="setNodeStatus('fixtures', 'done', this)">Done</div>
+                  </div>
+                </div>
+                <span class="flowchart-node-phase">Phase 6</span>
+                <i class="fas fa-lightbulb flowchart-node-icon" style="color: #e91e63;"></i>
+                <div class="flowchart-node-title">Fixtures</div>
+                <div class="flowchart-node-desc">Lights, Switches, Outlets</div>
+              </div>
+              <div class="flowchart-node phase-6" data-category="finishes" onclick="selectWorkflowNode('finishes', this, event)">
+                <div class="flowchart-node-status">
+                  <div class="node-status-btn todo" onclick="toggleNodeStatus(this, event)" data-category="finishes"></div>
+                  <div class="node-status-dropdown">
+                    <div class="node-status-option todo" onclick="setNodeStatus('finishes', 'todo', this)">Todo</div>
+                    <div class="node-status-option in-progress" onclick="setNodeStatus('finishes', 'in-progress', this)">In Progress</div>
+                    <div class="node-status-option done" onclick="setNodeStatus('finishes', 'done', this)">Done</div>
+                  </div>
+                </div>
+                <span class="flowchart-node-phase">Phase 6</span>
+                <i class="fas fa-palette flowchart-node-icon" style="color: #e91e63;"></i>
+                <div class="flowchart-node-title">Finishes</div>
+                <div class="flowchart-node-desc">Final Touches, Polishing</div>
+              </div>
+            </div>
+            <div class="flowchart-arrow">↓</div>
+
+            <!-- Phase 7: Final -->
+            <div class="flowchart-single">
+              <div class="flowchart-node phase-1" style="background: linear-gradient(135deg, #c8e6c9, #a5d6a7); border-color: #66bb6a;" data-category="other" onclick="selectWorkflowNode('other', this, event)">
+                <div class="flowchart-node-status">
+                  <div class="node-status-btn todo" onclick="toggleNodeStatus(this, event)" data-category="other"></div>
+                  <div class="node-status-dropdown">
+                    <div class="node-status-option todo" onclick="setNodeStatus('other', 'todo', this)">Todo</div>
+                    <div class="node-status-option in-progress" onclick="setNodeStatus('other', 'in-progress', this)">In Progress</div>
+                    <div class="node-status-option done" onclick="setNodeStatus('other', 'done', this)">Done</div>
+                  </div>
+                </div>
+                <span class="flowchart-node-phase">Phase 7</span>
+                <i class="fas fa-check-circle flowchart-node-icon" style="color: #2e7d32;"></i>
+                <div class="flowchart-node-title">Testing & Handover</div>
+                <div class="flowchart-node-desc">Commissioning, Snagging, Final Inspection</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Tasks Panel -->
+        <div class="workflow-tasks-panel" id="workflowTasksPanel">
+          <div class="workflow-tasks-header">
+            <h3>
+              <i class="fas fa-tasks"></i>
+              <span id="workflowCategoryTitle">Select a Category</span>
+            </h3>
+            <p id="workflowCategoryDesc">Click on a workflow node to view related tasks</p>
+          </div>
+          <div class="workflow-tasks-metrics" id="workflowMetrics" style="display: none;">
+            <div class="workflow-metric">
+              <div class="workflow-metric-value" id="wfMetricTotal">0</div>
+              <div class="workflow-metric-label">Total Tasks</div>
+            </div>
+            <div class="workflow-metric">
+              <div class="workflow-metric-value" id="wfMetricDone">0</div>
+              <div class="workflow-metric-label">Completed</div>
+            </div>
+            <div class="workflow-metric">
+              <div class="workflow-metric-value" id="wfMetricProgress">0%</div>
+              <div class="workflow-metric-label">Progress</div>
+            </div>
+          </div>
+          <div class="workflow-tasks-list" id="workflowTasksList">
+            <div class="workflow-empty-state">
+              <i class="fas fa-hand-pointer"></i>
+              <p>Click on any workflow node to see related tasks</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Data Model
+    const STORAGE_KEY = 'hotelProject_v2';
+    const USER_STORAGE_KEY = 'hotelProject_user';
+    const MEETING_STORAGE_KEY = 'hotelProject_meetings';
+
+    // User Management
+    let currentUser = JSON.parse(localStorage.getItem(USER_STORAGE_KEY)) || null;
+
+    function initUser() {
+      if (currentUser) {
+        updateUserUI();
+      } else {
+        showLoginModal();
+      }
+    }
+
+    function showLoginModal() {
+      document.getElementById('loginModal').classList.add('show');
+    }
+
+    function closeLoginModal() {
+      document.getElementById('loginModal').classList.remove('show');
+    }
+
+    function closeLoginOnOverlay(event) {
+      if (event.target.id === 'loginModal') {
+        closeLoginModal();
+      }
+    }
+
+    function handleLogin() {
+      const name = document.getElementById('loginName').value.trim();
+      const role = document.getElementById('loginRole').value;
+      
+      if (!name || !role) {
+        showToast('Please enter name and select role', 'error');
+        return;
+      }
+
+      currentUser = { name, role, loginTime: new Date().toISOString() };
+      localStorage.setItem(USER_STORAGE_KEY, JSON.stringify(currentUser));
+      updateUserUI();
+      closeLoginModal();
+      showToast(`Welcome ${name}! (${role})`);
+    }
+
+    function handleLogout() {
+      currentUser = null;
+      localStorage.removeItem(USER_STORAGE_KEY);
+      updateUserUI();
+      closeLoginModal();
+      showToast('Logged out successfully');
+    }
+
+    function updateUserUI() {
+      const userNameEl = document.getElementById('userName');
+      const userRoleEl = document.getElementById('userRole');
+      
+      if (currentUser) {
+        userNameEl.textContent = currentUser.name;
+        userRoleEl.textContent = currentUser.role.charAt(0).toUpperCase() + currentUser.role.slice(1);
+        userRoleEl.className = `user-role-badge ${currentUser.role}`;
+      } else {
+        userNameEl.textContent = 'Guest';
+        userRoleEl.textContent = 'User';
+        userRoleEl.className = 'user-role-badge user';
+      }
+    }
+
+    function isAdmin() {
+      return currentUser && currentUser.role === 'admin';
+    }
+
+    function isManager() {
+      return currentUser && (currentUser.role === 'admin' || currentUser.role === 'manager');
+    }
+
+    // Meeting Minutes
+    const MEETING_ENTRIES_KEY = 'hotelProject_meetingEntries';
+    const MANUAL_TODOS_KEY = 'hotelProject_manualTodos';
+
+    function showMeetingMinutes() {
+      document.getElementById('meetingModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+      loadTodayMeeting();
+    }
+
+    function closeMeetingMinutes() {
+      // Auto-save any pending changes before closing
+      const textarea = document.getElementById('newMeetingEntry');
+      if (textarea && textarea.value.trim() && textarea.value.trim() !== lastSavedContent) {
+        autoSaveCurrentEntry();
+      }
+      clearAutoSaveTimer();
+      
+      document.getElementById('meetingModal').classList.remove('show');
+      document.body.style.overflow = '';
+      document.querySelector('.meeting-content').classList.remove('with-todos');
+    }
+
+    function closeMeetingOnOverlay(event) {
+      if (event.target.id === 'meetingModal') {
+        closeMeetingMinutes();
+      }
+    }
+
+    function loadTodayMeeting() {
+      const today = getTodayISO();
+      document.getElementById('meetingViewDate').value = today;
+      loadMeetingForDate();
+    }
+
+    function loadMeetingForDate() {
+      const date = document.getElementById('meetingViewDate').value || getTodayISO();
+      renderMeetingEntries(date);
+      renderMeetingDayTodos(date);
+      // Show todos column
+      document.querySelector('.meeting-content').classList.add('with-todos');
+    }
+
+    function renderMeetingDayTodos(date) {
+      const container = document.getElementById('meetingDayTodosList');
+      const dateLabel = document.getElementById('meetingDayTodosDate');
+      dateLabel.textContent = `To Do Items for ${date}`;
+      
+      // Collect all todos for this date
+      let todos = [];
+      
+      // From tasks
+      state.spaces.forEach(space => {
+        space.tasks.forEach(task => {
+          if (task.deadline === date) {
+            todos.push({
+              id: task.id,
+              content: task.title,
+              date: date,
+              source: 'task',
+              spaceName: space.name,
+              spaceId: space.id,
+              category: task.category,
+              status: task.status,
+              assignedTo: task.assignedTo || 'Unassigned',
+              remarks: task.remarks || ''
+            });
+          }
+        });
+      });
+      
+      // From manual todos
+      const manualTodos = JSON.parse(localStorage.getItem(MANUAL_TODOS_KEY)) || [];
+      manualTodos.forEach(todo => {
+        if (todo.date === date) {
+          todos.push({
+            id: todo.id,
+            content: todo.title,
+            date: date,
+            source: 'manual',
+            assignedTo: todo.assignedTo || 'Unassigned',
+            remarks: todo.remarks || ''
+          });
+        }
+      });
+      
+      // From meeting minutes (extract lines with dates)
+      const entries = JSON.parse(localStorage.getItem(MEETING_ENTRIES_KEY)) || [];
+      entries.forEach(entry => {
+        if (entry.date === date) {
+          const extractedTodos = extractTodosFromContent(entry.content, entry.id, entry.userName);
+          todos = todos.concat(extractedTodos);
+        }
+      });
+      
+      // Group by date
+      const todosByDate = {};
+      todos.forEach(todo => {
+        if (!todosByDate[todo.date]) {
+          todosByDate[todo.date] = [];
+        }
+        todosByDate[todo.date].push(todo);
+      });
+      
+      if (todos.length === 0) {
+        container.innerHTML = `
+          <div class="workflow-empty-state">
+            <i class="fas fa-check-circle"></i>
+            <p>No to do items for ${date}</p>
+            <p style="font-size: 11px; margin-top: 8px; color: var(--text-light);">Mention a date (YYYY-MM-DD) in your notes to create a to-do item</p>
+          </div>
+        `;
+        return;
+      }
+      
+      // Show todos for the selected date first, then others
+      let html = '';
+      if (todosByDate[date] && todosByDate[date].length > 0) {
+        html += todosByDate[date].map(todo => {
+          const sourceClass = `todo-item-source ${todo.source}`;
+          const sourceLabel = todo.source === 'task' ? 'Task' : todo.source === 'meeting' ? 'Meeting Note' : 'Manual';
+          const statusClass = todo.status ? `status-${todo.status}` : '';
+          const statusLabel = todo.status === 'done' ? 'Done' : todo.status === 'in-progress' ? 'In Progress' : 'Todo';
+          
+          return `
+            <div class="meeting-todo-item" onclick="${todo.source === 'task' ? `navigateToTask('${todo.spaceId}', '${todo.id}')` : ''}">
+              <div class="meeting-todo-item-header">
+                <span class="meeting-todo-item-date">
+                  <i class="far fa-calendar-alt"></i> ${todo.date}
+                </span>
+                <span class="${sourceClass}" style="font-size: 10px;">${sourceLabel}</span>
+              </div>
+              <div class="meeting-todo-item-content">${todo.content}</div>
+              <div class="meeting-todo-item-source">
+                ${todo.spaceName ? `<span><i class="fas fa-map-marker-alt"></i> ${todo.spaceName}</span>` : ''}
+                ${todo.status ? `<span class="task-status ${statusClass}">${statusLabel}</span>` : ''}
+                ${todo.assignedTo ? `<span><i class="fas fa-user"></i> ${todo.assignedTo}</span>` : ''}
+              </div>
+            </div>
+          `;
+        }).join('');
+      }
+      
+      // Show other dates' todos
+      Object.keys(todosByDate).forEach(todoDate => {
+        if (todoDate !== date && todosByDate[todoDate].length > 0) {
+          html += `<div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid var(--border);">`;
+          html += `<div style="font-size: 11px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px;">${todoDate}</div>`;
+          html += todosByDate[todoDate].map(todo => {
+            const sourceClass = `todo-item-source ${todo.source}`;
+            const sourceLabel = todo.source === 'task' ? 'Task' : todo.source === 'meeting' ? 'Meeting Note' : 'Manual';
+            
+            return `
+              <div class="meeting-todo-item" style="opacity: 0.7;" onclick="${todo.source === 'task' ? `navigateToTask('${todo.spaceId}', '${todo.id}')` : ''}">
+                <div class="meeting-todo-item-header">
+                  <span class="meeting-todo-item-date">
+                    <i class="far fa-calendar-alt"></i> ${todo.date}
+                  </span>
+                  <span class="${sourceClass}" style="font-size: 10px;">${sourceLabel}</span>
+                </div>
+                <div class="meeting-todo-item-content">${todo.content}</div>
+              </div>
+            `;
+          }).join('');
+          html += `</div>`;
+        }
+      });
+      
+      container.innerHTML = html;
+    }
+
+    let autoSaveTimer = null;
+    let lastSavedContent = '';
+
+    function formatMeetingContent(content) {
+      // Format content with better line breaks and styling
+      return content
+        .split('\n')
+        .map(line => {
+          const trimmed = line.trim();
+          // Highlight lines with dates
+          const dateMatch = trimmed.match(/\b(\d{4}-\d{2}-\d{2})\b/);
+          if (dateMatch) {
+            return `<span style="background: #fff9e6; padding: 2px 4px; border-radius: 3px; border-left: 3px solid var(--warning);">${escapeHtml(line)}</span>`;
+          }
+          return escapeHtml(line);
+        })
+        .join('\n');
+    }
+
+    function escapeHtml(text) {
+      const div = document.createElement('div');
+      div.textContent = text;
+      return div.innerHTML;
+    }
+
+    function extractTodosFromContent(content, entryId, userName) {
+      const todos = [];
+      const lines = content.split('\n');
+      
+      lines.forEach((line, index) => {
+        const trimmed = line.trim();
+        if (!trimmed) return;
+        
+        // Check if line contains a date
+        const dateMatch = trimmed.match(/\b(\d{4}-\d{2}-\d{2})\b/);
+        if (dateMatch) {
+          const date = dateMatch[1];
+          // Extract the todo text (remove date and any leading dashes/bullets)
+          let todoText = trimmed
+            .replace(/\b\d{4}-\d{2}-\d{2}\b/g, '')
+            .replace(/^[-*•]\s*/, '')
+            .trim();
+          
+          if (todoText) {
+            todos.push({
+              id: `${entryId}_line_${index}`,
+              date: date,
+              content: todoText,
+              source: 'meeting',
+              sourceEntryId: entryId,
+              sourceLineIndex: index,
+              assignedTo: userName,
+              createdAt: new Date().toISOString()
+            });
+          }
+        }
+      });
+      
+      return todos;
+    }
+
+    function renderMeetingEntries(date) {
+      const entries = JSON.parse(localStorage.getItem(MEETING_ENTRIES_KEY)) || [];
+      const dateEntries = entries.filter(e => e.date === date && !e.isDraft);
+      const container = document.getElementById('meetingEntriesContainer');
+      
+      let html = '';
+      
+      // Render existing finalized entries
+      dateEntries.forEach(entry => {
+        const isEditing = entry.id === window.editingEntryId;
+        html += `
+          <div class="meeting-entry" data-entry-id="${entry.id}">
+            <div class="meeting-entry-header">
+              <span class="meeting-entry-user">
+                <i class="fas fa-user"></i> ${entry.userName}
+              </span>
+              <span class="meeting-entry-date">
+                <i class="far fa-clock"></i> ${entry.timestamp}
+              </span>
+              ${!isEditing ? `
+                <button class="meeting-entry-edit-btn btn-icon" onclick="startEditEntry('${entry.id}')" title="Edit">
+                  <i class="fas fa-edit"></i>
+                </button>
+              ` : `
+                <button class="meeting-entry-edit-btn btn-icon" onclick="cancelEditEntry()" title="Cancel">
+                  <i class="fas fa-times"></i>
+                </button>
+              `}
+            </div>
+            ${isEditing ? `
+              <textarea 
+                class="meeting-entry-content-editable" 
+                id="editEntry_${entry.id}"
+                onblur="saveEditEntry('${entry.id}')"
+                onkeydown="handleEditEntryKeydown(event, '${entry.id}')"
+              >${entry.content}</textarea>
+            ` : `
+              <div class="meeting-entry-content">${formatMeetingContent(entry.content)}</div>
+            `}
+          </div>
+        `;
+      });
+      
+      // Check if there's a draft entry for this date
+      const draftEntry = entries.find(e => e.date === date && e.isDraft && e.userName === (currentUser ? currentUser.name : 'Guest'));
+      const draftContent = draftEntry ? draftEntry.content : '';
+      if (draftEntry) {
+        currentDraftEntryId = draftEntry.id;
+        lastSavedContent = draftContent;
+      } else {
+        currentDraftEntryId = null;
+        lastSavedContent = '';
+      }
+      
+      // Add new entry input at the end
+      const currentUserName = currentUser ? currentUser.name : 'Guest';
+      const now = new Date();
+      const timestamp = now.toLocaleString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+      
+      html += `
+        <div class="meeting-entry meeting-entry-new">
+          <div class="meeting-entry-header">
+            <span class="meeting-entry-user">
+              <i class="fas fa-user"></i> ${currentUserName}
+            </span>
+            <span class="meeting-entry-date">
+              <i class="far fa-clock"></i> ${timestamp}
+            </span>
+          </div>
+          <textarea 
+            class="meeting-entry-input" 
+            id="newMeetingEntry"
+            placeholder="Type your meeting notes here... Type 'by date' and press space or enter to insert a date. Auto-saves every 15 seconds."
+            onkeydown="handleMeetingEntryKeydown(event)"
+            oninput="handleMeetingEntryInput(event)"
+          >${draftContent}</textarea>
+          <div class="meeting-entry-actions">
+            <span id="autoSaveStatus" style="font-size: 11px; color: var(--text-light); display: flex; align-items: center; gap: 4px;">
+              <i class="fas fa-circle" style="font-size: 6px;"></i> Ready
+            </span>
+            <div style="display: flex; gap: 8px;">
+              <button class="btn btn-secondary btn-sm" onclick="clearNewEntry()" style="padding: 6px 12px; font-size: 12px;">
+                <i class="fas fa-times"></i> Clear
+              </button>
+              <button class="btn btn-primary btn-sm" onclick="saveNewMeetingEntry()" style="padding: 6px 12px; font-size: 12px;">
+                <i class="fas fa-save"></i> Save
+            </button>
+          </div>
+        </div>
+        </div>
+      `;
+      
+      container.innerHTML = html;
+      container.scrollTop = container.scrollHeight;
+      
+      // Clear auto-save timer
+      clearAutoSaveTimer();
+      
+      // Focus on new entry input
+      setTimeout(() => {
+        const newInput = document.getElementById('newMeetingEntry');
+        if (newInput) {
+          newInput.focus();
+          // Move cursor to end if there's draft content
+          if (draftContent) {
+            newInput.setSelectionRange(draftContent.length, draftContent.length);
+          }
+          // Start auto-save timer
+          startAutoSave();
+        }
+      }, 100);
+    }
+
+    function handleMeetingEntryInput(event) {
+      processMeetingInput(event);
+      // Reset auto-save timer on input
+      startAutoSave();
+    }
+
+    function startAutoSave() {
+      clearAutoSaveTimer();
+      updateAutoSaveStatus('typing', 'Typing...');
+      
+      autoSaveTimer = setTimeout(() => {
+        const textarea = document.getElementById('newMeetingEntry');
+        if (textarea && textarea.value.trim()) {
+          const currentContent = textarea.value.trim();
+          if (currentContent !== lastSavedContent) {
+            autoSaveCurrentEntry(); // Auto-save without creating new entry
+          }
+        }
+      }, 15000); // Auto-save every 15 seconds
+    }
+
+    function clearAutoSaveTimer() {
+      if (autoSaveTimer) {
+        clearTimeout(autoSaveTimer);
+        autoSaveTimer = null;
+      }
+    }
+
+    function updateAutoSaveStatus(status, text) {
+      const statusEl = document.getElementById('autoSaveStatus');
+      if (!statusEl) return;
+      
+      const icon = statusEl.querySelector('i');
+      statusEl.innerHTML = `<i class="fas fa-circle" style="font-size: 6px;"></i> ${text}`;
+      
+      if (status === 'saving') {
+        icon.style.color = 'var(--warning)';
+        statusEl.style.color = 'var(--warning)';
+      } else if (status === 'saved') {
+        icon.style.color = 'var(--success)';
+        statusEl.style.color = 'var(--success)';
+      } else {
+        icon.style.color = 'var(--text-light)';
+        statusEl.style.color = 'var(--text-light)';
+      }
+    }
+
+    let currentDraftEntryId = null;
+
+    function autoSaveCurrentEntry() {
+      if (!currentUser) return;
+
+      const date = document.getElementById('meetingViewDate').value || getTodayISO();
+      const textarea = document.getElementById('newMeetingEntry');
+      if (!textarea) return;
+      
+      const content = textarea.value.trim();
+      
+      if (!content) {
+          return;
+        }
+
+      // Don't save if content hasn't changed
+      if (content === lastSavedContent) {
+        return;
+      }
+
+      updateAutoSaveStatus('saving', 'Saving...');
+
+      const entries = JSON.parse(localStorage.getItem(MEETING_ENTRIES_KEY)) || [];
+      const now = new Date();
+      const timestamp = now.toLocaleString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+
+      // If we have a draft entry, update it; otherwise create new
+      if (currentDraftEntryId) {
+        const entryIndex = entries.findIndex(e => e.id === currentDraftEntryId);
+        if (entryIndex !== -1) {
+          entries[entryIndex].content = content;
+          entries[entryIndex].timestamp = timestamp;
+        } else {
+          currentDraftEntryId = null;
+        }
+      }
+
+      if (!currentDraftEntryId) {
+        currentDraftEntryId = uid();
+        entries.push({
+          id: currentDraftEntryId,
+          date,
+          userName: currentUser.name,
+          timestamp,
+          content,
+          createdAt: now.toISOString(),
+          isDraft: true
+        });
+      }
+
+      localStorage.setItem(MEETING_ENTRIES_KEY, JSON.stringify(entries));
+      lastSavedContent = content;
+      
+      // Update the displayed entries without clearing the input
+      updateMeetingEntriesDisplay(date);
+      renderMeetingDayTodos(date);
+      
+      updateAutoSaveStatus('saved', 'Saved');
+      
+      // Reset status after 2 seconds
+      setTimeout(() => {
+        updateAutoSaveStatus('ready', 'Ready');
+      }, 2000);
+    }
+
+    // Entry editing functions
+    window.editingEntryId = null;
+
+    function startEditEntry(entryId) {
+      window.editingEntryId = entryId;
+      const date = document.getElementById('meetingViewDate').value || getTodayISO();
+      renderMeetingEntries(date);
+      
+      // Focus on the textarea
+      setTimeout(() => {
+        const textarea = document.getElementById(`editEntry_${entryId}`);
+        if (textarea) {
+          textarea.focus();
+          textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+        }
+      }, 100);
+    }
+
+    function cancelEditEntry() {
+      window.editingEntryId = null;
+      const date = document.getElementById('meetingViewDate').value || getTodayISO();
+      renderMeetingEntries(date);
+    }
+
+    function saveEditEntry(entryId) {
+      const textarea = document.getElementById(`editEntry_${entryId}`);
+      if (!textarea) return;
+      
+      const newContent = textarea.value.trim();
+      const entries = JSON.parse(localStorage.getItem(MEETING_ENTRIES_KEY)) || [];
+      const entryIndex = entries.findIndex(e => e.id === entryId);
+      
+      if (entryIndex !== -1) {
+        const now = new Date();
+        entries[entryIndex].content = newContent;
+        entries[entryIndex].timestamp = now.toLocaleString('en-US', { 
+          month: 'short', 
+          day: 'numeric', 
+          hour: '2-digit', 
+          minute: '2-digit' 
+        });
+        entries[entryIndex].updatedAt = now.toISOString();
+        
+        localStorage.setItem(MEETING_ENTRIES_KEY, JSON.stringify(entries));
+        
+        window.editingEntryId = null;
+        const date = document.getElementById('meetingViewDate').value || getTodayISO();
+        renderMeetingEntries(date);
+        renderMeetingDayTodos(date);
+        showToast('Entry updated');
+      }
+    }
+
+    function handleEditEntryKeydown(event, entryId) {
+      // Ctrl+Enter or Cmd+Enter to save
+      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+        event.preventDefault();
+        saveEditEntry(entryId);
+      }
+      // Escape to cancel
+      if (event.key === 'Escape') {
+        event.preventDefault();
+        cancelEditEntry();
+      }
+    }
+
+    function saveNewMeetingEntry() {
+      if (!currentUser) {
+        showToast('Please login first', 'error');
+        return;
+      }
+
+      const date = document.getElementById('meetingViewDate').value || getTodayISO();
+      const textarea = document.getElementById('newMeetingEntry');
+      if (!textarea) return;
+      
+      const content = textarea.value.trim();
+      
+      if (!content) {
+        showToast('Please enter some notes', 'error');
+        return;
+      }
+
+      updateAutoSaveStatus('saving', 'Saving...');
+
+      const entries = JSON.parse(localStorage.getItem(MEETING_ENTRIES_KEY)) || [];
+      const now = new Date();
+      const timestamp = now.toLocaleString('en-US', { 
+        month: 'short', 
+        day: 'numeric', 
+        hour: '2-digit', 
+        minute: '2-digit' 
+      });
+
+      // If we have a draft, finalize it; otherwise create new entry
+      if (currentDraftEntryId) {
+        const entryIndex = entries.findIndex(e => e.id === currentDraftEntryId);
+        if (entryIndex !== -1) {
+          entries[entryIndex].content = content;
+          entries[entryIndex].timestamp = timestamp;
+          entries[entryIndex].isDraft = false; // Finalize the entry
+        }
+      } else {
+        entries.push({
+          id: uid(),
+          date,
+          userName: currentUser.name,
+          timestamp,
+          content,
+          createdAt: now.toISOString()
+        });
+      }
+
+      localStorage.setItem(MEETING_ENTRIES_KEY, JSON.stringify(entries));
+      lastSavedContent = '';
+      currentDraftEntryId = null;
+      
+      // Clear the textarea
+      textarea.value = '';
+      
+      // Re-render to show the saved entry and create new input
+      renderMeetingEntries(date);
+      renderMeetingDayTodos(date);
+      
+      updateAutoSaveStatus('saved', 'Saved');
+      showToast('Entry saved');
+      
+      // Reset status after 2 seconds
+      setTimeout(() => {
+        updateAutoSaveStatus('ready', 'Ready');
+      }, 2000);
+    }
+
+    function updateMeetingEntriesDisplay(date) {
+      const entries = JSON.parse(localStorage.getItem(MEETING_ENTRIES_KEY)) || [];
+      const dateEntries = entries.filter(e => e.date === date && !e.isDraft);
+      const container = document.getElementById('meetingEntriesContainer');
+      
+      // Get existing HTML and find the new entry section
+      const existingHtml = container.innerHTML;
+      const newEntryMatch = existingHtml.match(/<div class="meeting-entry meeting-entry-new">[\s\S]*?<\/div>\s*<\/div>/);
+      const newEntryHtml = newEntryMatch ? newEntryMatch[0] : '';
+      
+      let html = '';
+      
+      // Render existing finalized entries
+      dateEntries.forEach(entry => {
+        html += `
+          <div class="meeting-entry">
+            <div class="meeting-entry-header">
+              <span class="meeting-entry-user">
+                <i class="fas fa-user"></i> ${entry.userName}
+              </span>
+              <span class="meeting-entry-date">
+                <i class="far fa-clock"></i> ${entry.timestamp}
+              </span>
+            </div>
+            <div class="meeting-entry-content">${entry.content.replace(/\n/g, '\n')}</div>
+          </div>
+        `;
+      });
+      
+      // Add back the new entry input
+      html += newEntryHtml;
+      
+      container.innerHTML = html;
+      
+      // Restore focus and content
+      const newInput = document.getElementById('newMeetingEntry');
+      if (newInput) {
+        // Restore the draft content if it exists
+        const draftEntry = entries.find(e => e.id === currentDraftEntryId);
+        if (draftEntry) {
+          newInput.value = draftEntry.content;
+        }
+        newInput.focus();
+        // Restore cursor position (at end)
+        newInput.setSelectionRange(newInput.value.length, newInput.value.length);
+      }
+    }
+
+    function clearNewEntry() {
+      if (!confirm('Clear current entry? Unsaved changes will be lost.')) return;
+      
+      const textarea = document.getElementById('newMeetingEntry');
+      if (textarea) {
+        textarea.value = '';
+        lastSavedContent = '';
+        currentDraftEntryId = null;
+        clearAutoSaveTimer();
+        updateAutoSaveStatus('ready', 'Ready');
+        processMeetingDatesForInput(textarea);
+        
+        // Remove draft entry if it exists
+        const date = document.getElementById('meetingViewDate').value || getTodayISO();
+        const entries = JSON.parse(localStorage.getItem(MEETING_ENTRIES_KEY)) || [];
+        const filtered = entries.filter(e => !(e.id === currentDraftEntryId && e.isDraft));
+        localStorage.setItem(MEETING_ENTRIES_KEY, JSON.stringify(filtered));
+      }
+    }
+
+    function handleMeetingEntryKeydown(event) {
+      // Ctrl+Enter or Cmd+Enter to save
+      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+        event.preventDefault();
+        saveNewMeetingEntry();
+      }
+    }
+
+    let datePickerPosition = { top: 0, left: 0 };
+
+    function handleMeetingEntryKeydown(event) {
+      const textarea = event.target;
+      const text = textarea.value;
+      const cursorPos = textarea.selectionStart;
+      const textBefore = text.substring(0, cursorPos);
+      const textBeforeLower = textBefore.toLowerCase();
+      
+      // Ctrl+Enter or Cmd+Enter to save
+      if ((event.ctrlKey || event.metaKey) && event.key === 'Enter') {
+        event.preventDefault();
+        saveNewMeetingEntry();
+        return;
+      }
+      
+      // Check if "by date" was just completed (on space or enter)
+      if (event.key === ' ' || event.key === 'Enter') {
+        // Check if text ends with "by date" (with or without space before)
+        if (textBeforeLower.endsWith(' by date') || textBeforeLower.endsWith('bydate')) {
+          event.preventDefault();
+          showDatePickerForEntry(textarea, cursorPos);
+          return;
+        }
+      }
+    }
+
+    function showDatePickerForEntry(textarea, cursorPos) {
+      const rect = textarea.getBoundingClientRect();
+      const popup = document.getElementById('datePickerPopup');
+      popup.style.top = (rect.top + 40) + 'px';
+      popup.style.left = (rect.left + 200) + 'px';
+      popup.classList.add('show');
+      popup.dataset.cursorPos = cursorPos;
+      document.getElementById('datePickerInput').focus();
+    }
+
+    function insertDateFromPicker() {
+      const date = document.getElementById('datePickerInput').value;
+      if (!date) return;
+      
+      const textarea = document.getElementById('newMeetingEntry');
+      if (!textarea) return;
+      
+      const text = textarea.value;
+      const savedCursorPos = document.getElementById('datePickerPopup').dataset.cursorPos;
+      const cursorPos = savedCursorPos ? parseInt(savedCursorPos) : textarea.selectionStart;
+      const textBefore = text.substring(0, cursorPos);
+      const textAfter = text.substring(cursorPos);
+      
+      // Replace "by date" or "bydate" with the actual date
+      let newText = textBefore;
+      if (textBefore.toLowerCase().endsWith(' by date')) {
+        newText = textBefore.slice(0, -8) + date;
+      } else if (textBefore.toLowerCase().endsWith('bydate')) {
+        newText = textBefore.slice(0, -6) + date;
+      } else {
+        newText = textBefore + date;
+      }
+      
+      textarea.value = newText + textAfter;
+      
+      // Move cursor after inserted date
+      const newPos = newText.length;
+      textarea.setSelectionRange(newPos, newPos);
+      
+      closeDatePicker();
+      processMeetingDatesForInput(textarea);
+      textarea.focus();
+      // Reset auto-save timer
+      startAutoSave();
+    }
+
+    function closeDatePicker() {
+      document.getElementById('datePickerPopup').classList.remove('show');
+    }
+
+    function processMeetingInput(event) {
+      // Process dates in the new entry input
+      const textarea = event.target;
+      if (textarea.id === 'newMeetingEntry') {
+        processMeetingDatesForInput(textarea);
+      } else {
+        processMeetingDates();
+      }
+    }
+
+    function processMeetingDatesForInput(textarea) {
+      const text = textarea.value;
+      const dateRegex = /\b(\d{4}-\d{2}-\d{2})\b/g;
+      const dates = [...new Set(text.match(dateRegex) || [])];
+      
+      // Store dates for click detection
+      textarea.dataset.dates = JSON.stringify(dates);
+      
+      // Show date buttons if dates found
+      const datesList = document.getElementById('meetingDatesList');
+      const datesButtons = document.getElementById('meetingDatesButtons');
+      
+      if (dates.length > 0 && datesList && datesButtons) {
+        datesList.style.display = 'block';
+        datesButtons.innerHTML = dates.map(date => `
+          <button 
+            class="meeting-date-link" 
+            onclick="showTasksForDate('${date}')"
+            style="padding: 6px 12px; border: 1px solid var(--primary); border-radius: var(--radius); background: var(--bg-white); cursor: pointer; font-size: 12px;"
+          >
+            <i class="far fa-calendar-alt"></i> ${date}
+          </button>
+      `).join('');
+      } else if (datesList) {
+        datesList.style.display = 'none';
+      }
+    }
+
+    function processMeetingDates() {
+      const textarea = document.getElementById('meetingNotes');
+      if (!textarea) return;
+      const text = textarea.value;
+      const dateRegex = /\b(\d{4}-\d{2}-\d{2})\b/g;
+      const dates = [...new Set(text.match(dateRegex) || [])]; // Remove duplicates
+      
+      // Store dates for click detection
+      textarea.dataset.dates = JSON.stringify(dates);
+      
+      // Show date buttons
+      const datesList = document.getElementById('meetingDatesList');
+      const datesButtons = document.getElementById('meetingDatesButtons');
+      
+      if (dates.length > 0) {
+        datesList.style.display = 'block';
+        datesButtons.innerHTML = dates.map(date => `
+          <button 
+            class="meeting-date-link" 
+            onclick="showTasksForDate('${date}'); document.getElementById('meetingNotes').dataset.selectedDate='${date}'"
+            style="padding: 6px 12px; border: 1px solid var(--primary); border-radius: var(--radius); background: var(--bg-white); cursor: pointer;"
+          >
+            <i class="far fa-calendar-alt"></i> ${date}
+        </button>
+      `).join('');
+      } else {
+        datesList.style.display = 'none';
+      }
+      
+      // Update task list if a date was previously selected
+      const selectedDate = textarea.dataset.selectedDate;
+      if (selectedDate && dates.includes(selectedDate)) {
+        showTasksForDate(selectedDate);
+      }
+    }
+
+    // Todo List Modal Functions
+    let currentTodoFilter = 'all';
+
+    function showTodoList() {
+      document.getElementById('todoListModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+      currentTodoFilter = 'all';
+      updateFilterButtons();
+      renderTodoList();
+    }
+
+    function setTodoFilter(filter) {
+      if (filter === 'date') {
+        const dateInput = document.getElementById('todoDateFilter');
+        if (!dateInput.value) {
+          dateInput.focus();
+          return;
+        }
+      }
+      currentTodoFilter = filter;
+      updateFilterButtons();
+      renderTodoList();
+    }
+
+    function updateFilterButtons() {
+      // Remove active class from all buttons
+      document.querySelectorAll('.todo-filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Add active class to current filter
+      const filterMap = {
+        'all': 'filterAll',
+        'today': 'filterToday',
+        'tomorrow': 'filterTomorrow',
+        'overdue': 'filterOverdue'
+      };
+      
+      const activeBtnId = filterMap[currentTodoFilter];
+      if (activeBtnId && document.getElementById(activeBtnId)) {
+        document.getElementById(activeBtnId).classList.add('active');
+      }
+      
+      // Highlight date input if date filter is active
+      const dateInput = document.getElementById('todoDateFilter');
+      if (currentTodoFilter === 'date' && dateInput.value) {
+        dateInput.style.borderColor = 'var(--primary)';
+        dateInput.style.boxShadow = '0 0 0 3px rgba(0, 115, 234, 0.1)';
+      } else {
+        dateInput.style.borderColor = '';
+        dateInput.style.boxShadow = '';
+      }
+    }
+
+    function closeTodoList() {
+      document.getElementById('todoListModal').classList.remove('show');
+      document.body.style.overflow = '';
+    }
+
+    function closeTodoListOnOverlay(event) {
+      if (event.target.id === 'todoListModal') {
+        closeTodoList();
+      }
+    }
+
+    function addManualTodo() {
+      const title = document.getElementById('manualTodoTitle').value.trim();
+      const date = document.getElementById('manualTodoDate').value;
+      const assignedTo = document.getElementById('manualTodoAssigned').value.trim();
+      
+      if (!title) {
+        showToast('Please enter a to do item', 'error');
+          return;
+        }
+
+      if (!date) {
+        showToast('Please select a due date', 'error');
+          return;
+        }
+
+      const todos = JSON.parse(localStorage.getItem(MANUAL_TODOS_KEY)) || [];
+      todos.push({
+        id: uid(),
+        title,
+        date,
+        assignedTo: assignedTo || (currentUser ? currentUser.name : 'Unassigned'),
+        remarks: '',
+        createdAt: new Date().toISOString(),
+        createdBy: currentUser ? currentUser.name : 'Unknown'
+      });
+      
+      localStorage.setItem(MANUAL_TODOS_KEY, JSON.stringify(todos));
+      
+      document.getElementById('manualTodoTitle').value = '';
+      document.getElementById('manualTodoDate').value = '';
+      document.getElementById('manualTodoAssigned').value = '';
+      
+      toggleAddTodoForm(); // Hide form after adding
+      renderTodoList();
+      showToast('To do item added');
+    }
+
+    function toggleAddTodoForm() {
+      const form = document.getElementById('addTodoForm');
+      form.classList.toggle('show');
+      if (form.classList.contains('show')) {
+        document.getElementById('manualTodoTitle').focus();
+      } else {
+        // Clear form
+        document.getElementById('manualTodoTitle').value = '';
+        document.getElementById('manualTodoDate').value = '';
+        document.getElementById('manualTodoAssigned').value = '';
+      }
+    }
+
+    function renderTodoList() {
+      const tbody = document.getElementById('todoListTableBody');
+      const today = getTodayISO();
+      const tomorrow = getTomorrowISO();
+      
+      // Collect all todos
+      let allTodos = [];
+      
+      // From tasks
+      state.spaces.forEach(space => {
+        space.tasks.forEach(task => {
+          if (task.deadline) {
+            allTodos.push({
+              id: task.id,
+              title: task.title,
+              date: task.deadline,
+              source: 'task',
+              spaceName: space.name,
+              spaceId: space.id,
+              category: task.category,
+              status: task.status,
+              assignedTo: task.assignedTo || 'Unassigned',
+              remarks: task.remarks || '',
+              isToday: task.deadline === today,
+              isOverdue: task.deadline < today && task.status !== 'done'
+            });
+          }
+        });
+      });
+      
+      // From manual todos
+      const manualTodos = JSON.parse(localStorage.getItem(MANUAL_TODOS_KEY)) || [];
+      manualTodos.forEach(todo => {
+        allTodos.push({
+          id: todo.id,
+          title: todo.title,
+          date: todo.date,
+          source: 'manual',
+          assignedTo: todo.assignedTo || 'Unassigned',
+          remarks: todo.remarks || '',
+          isToday: todo.date === today,
+          isOverdue: todo.date < today
+        });
+      });
+      
+      // From meeting minutes (extract lines with dates)
+      const entries = JSON.parse(localStorage.getItem(MEETING_ENTRIES_KEY)) || [];
+      entries.forEach(entry => {
+        // Use the same extraction logic as meeting minutes
+        const extractedTodos = extractTodosFromContent(entry.content, entry.id, entry.userName);
+        extractedTodos.forEach(todo => {
+          allTodos.push({
+            id: todo.id,
+            title: todo.content,
+            date: todo.date,
+            source: 'meeting',
+            assignedTo: todo.assignedTo,
+            remarks: `From meeting notes on ${entry.date}`,
+            isToday: todo.date === today,
+            isOverdue: todo.date < today,
+            sourceEntryId: todo.sourceEntryId,
+            sourceLineIndex: todo.sourceLineIndex
+          });
+        });
+      });
+      
+      // Apply filter
+      let filteredTodos = allTodos;
+      if (currentTodoFilter === 'today') {
+        filteredTodos = allTodos.filter(todo => todo.date === today);
+      } else if (currentTodoFilter === 'tomorrow') {
+        filteredTodos = allTodos.filter(todo => todo.date === tomorrow);
+      } else if (currentTodoFilter === 'overdue') {
+        filteredTodos = allTodos.filter(todo => todo.isOverdue);
+      } else if (currentTodoFilter === 'date') {
+        const selectedDate = document.getElementById('todoDateFilter').value;
+        if (selectedDate) {
+          filteredTodos = allTodos.filter(todo => todo.date === selectedDate);
+        }
+      }
+      
+      // Sort by date
+      filteredTodos.sort((a, b) => {
+        if (a.date < b.date) return -1;
+        if (a.date > b.date) return 1;
+        return 0;
+      });
+      
+      if (filteredTodos.length === 0) {
+        let emptyMessage = 'No to do items found';
+        if (currentTodoFilter === 'today') {
+          emptyMessage = 'No to do items for today';
+        } else if (currentTodoFilter === 'tomorrow') {
+          emptyMessage = 'No to do items for tomorrow';
+        } else if (currentTodoFilter === 'overdue') {
+          emptyMessage = 'No overdue items';
+        } else if (currentTodoFilter === 'date') {
+          const selectedDate = document.getElementById('todoDateFilter').value;
+          emptyMessage = selectedDate ? `No to do items for ${selectedDate}` : 'Please select a date';
+        }
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 40px; color: var(--text-light);">${emptyMessage}</td></tr>`;
+        return;
+      }
+      
+      tbody.innerHTML = filteredTodos.map(todo => {
+        const sourceClass = `todo-list-source ${todo.source}`;
+        const sourceLabel = todo.source === 'task' ? 'Task' : todo.source === 'meeting' ? 'Meeting Note' : 'Manual';
+        const statusClass = todo.status ? `status-${todo.status}` : '';
+        const statusLabel = todo.status === 'done' ? 'Done' : todo.status === 'in-progress' ? 'In Progress' : 'Todo';
+        const categoryInfo = todo.category ? (categories[todo.category] || categories.other) : null;
+        const dateLabel = todo.isToday ? `${todo.date} (Today)` : todo.isOverdue ? `${todo.date} (Overdue)` : todo.date;
+        const rowClass = todo.isToday ? 'today-row' : todo.isOverdue ? 'overdue-row' : '';
+        
+        return `
+          <tr class="${rowClass}" data-date="${todo.date}">
+            <td class="todo-list-cell-compact">${dateLabel}</td>
+            <td class="todo-list-cell-compact" title="${todo.title}">${todo.title}</td>
+            <td><span class="${sourceClass}">${sourceLabel}</span></td>
+            <td class="todo-list-cell-compact">${todo.spaceName || '—'}</td>
+            <td>${categoryInfo ? categoryInfo.name : '—'}</td>
+            <td>${todo.status ? `<span class="task-status ${statusClass}">${statusLabel}</span>` : '—'}</td>
+            <td class="todo-list-cell-compact">${todo.assignedTo}</td>
+            <td class="todo-list-cell-compact" title="${todo.remarks || ''}">${todo.remarks || '—'}</td>
+            <td style="text-align: center;">
+              ${todo.source === 'manual' ? `
+                <button class="btn-icon danger" onclick="deleteManualTodo('${todo.id}')" title="Delete" style="width: 28px; height: 28px; font-size: 12px;">
+                  <i class="fas fa-trash"></i>
+                </button>
+              ` : todo.source === 'task' ? `
+                <button class="btn-icon" onclick="navigateToTask('${todo.spaceId}', '${todo.id}')" title="View Task" style="width: 28px; height: 28px; font-size: 12px;">
+                  <i class="fas fa-external-link-alt"></i>
+                </button>
+              ` : '—'}
+            </td>
+          </tr>
+        `;
+      }).join('');
+      
+      // Scroll to top or today/overdue if applicable
+      setTimeout(() => {
+        if (currentTodoFilter === 'today' || currentTodoFilter === 'all') {
+          const todayRow = tbody.querySelector(`tr.today-row`);
+          if (todayRow) {
+            todayRow.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            todayRow.style.animation = 'pulse 1s';
+            setTimeout(() => todayRow.style.animation = '', 1000);
+            return;
+          }
+        }
+        
+        if (currentTodoFilter === 'overdue' || currentTodoFilter === 'all') {
+          const firstOverdue = tbody.querySelector('tr.overdue-row');
+          if (firstOverdue) {
+            firstOverdue.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            return;
+          }
+        }
+        
+        // Scroll to top for other filters
+        const firstRow = tbody.querySelector('tr');
+        if (firstRow) {
+          firstRow.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }, 100);
+    }
+
+    function getTomorrowISO() {
+      const tomorrow = new Date();
+      tomorrow.setDate(tomorrow.getDate() + 1);
+      return tomorrow.toISOString().split('T')[0];
+    }
+
+    function handleDateFilterChange() {
+      const dateInput = document.getElementById('todoDateFilter');
+      if (dateInput.value) {
+        setTodoFilter('date');
+      } else {
+        // If date is cleared, reset to "All"
+        currentTodoFilter = 'all';
+        updateFilterButtons();
+        renderTodoList();
+      }
+    }
+
+    function deleteManualTodo(id) {
+      if (!confirm('Delete this to do item?')) return;
+      const todos = JSON.parse(localStorage.getItem(MANUAL_TODOS_KEY)) || [];
+      const filtered = todos.filter(t => t.id !== id);
+      localStorage.setItem(MANUAL_TODOS_KEY, JSON.stringify(filtered));
+      renderTodoList();
+      showToast('To do item deleted');
+    }
+
+    function showTasksForDate(date) {
+      const titleEl = document.getElementById('meetingTasksTitle');
+      const descEl = document.getElementById('meetingTasksDesc');
+      const listEl = document.getElementById('meetingTasksList');
+      
+      titleEl.textContent = `Tasks Due: ${date}`;
+      descEl.textContent = `All tasks with deadline on ${date}`;
+      
+      // Collect all tasks due on this date
+      const today = getTodayISO();
+      let tasks = [];
+      
+      state.spaces.forEach(space => {
+        space.tasks.forEach(task => {
+          if (task.deadline === date) {
+            tasks.push({ ...task, spaceName: space.name, spaceId: space.id });
+          }
+        });
+      });
+
+      if (tasks.length === 0) {
+        listEl.innerHTML = `
+          <div class="workflow-empty-state">
+            <i class="fas fa-check-circle"></i>
+            <p>No tasks due on ${date}</p>
+          </div>
+        `;
+          return;
+        }
+
+      listEl.innerHTML = tasks.map(task => {
+        const isOverdue = task.deadline < today;
+        const statusClass = `status-${task.status}`;
+        const statusLabel = task.status === 'done' ? 'Done' : task.status === 'in-progress' ? 'In Progress' : 'Todo';
+
+        return `
+          <div class="meeting-task-item" onclick="navigateToTask('${task.spaceId}', '${task.id}')">
+            <div class="meeting-task-title">${task.title}</div>
+            <div class="meeting-task-meta">
+              <span><i class="fas fa-map-marker-alt"></i> ${task.spaceName}</span>
+              <span class="task-status ${statusClass}">${statusLabel}</span>
+              ${isOverdue ? '<span style="color: var(--danger);">Overdue</span>' : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Add Task Form Toggle
+    function toggleAddTaskForm() {
+      const form = document.getElementById('addTaskForm');
+      const isVisible = form.style.display !== 'none';
+      form.style.display = isVisible ? 'none' : 'grid';
+      if (!isVisible) {
+        document.getElementById('taskTitle').focus();
+      }
+    }
+
+    function createDefaultSpaces() {
+      const spaces = [];
+      for (let i = 1; i <= 10; i++) {
+        const code = 100 + i;
+        spaces.push({
+          id: `room-${code}`,
+          type: 'room',
+          name: `Room ${code}`,
+          label: `Guest Room ${code}`,
+          tasks: []
+        });
+      }
+      spaces.push(
+        { id: 'rest-all-day', type: 'restaurant', name: 'All Day Dining', label: 'Restaurant 1 - All Day', tasks: [] },
+        { id: 'rest-fine', type: 'restaurant', name: 'Fine Dining', label: 'Restaurant 2 - Fine', tasks: [] },
+        { id: 'public-lobby', type: 'public', name: 'Lobby', label: 'Lobby & Reception', tasks: [] },
+        { id: 'public-corridor', type: 'public', name: 'Guest Corridors', label: 'Typical Corridor', tasks: [] },
+        { id: 'public-back', type: 'public', name: 'Back of House', label: 'BOH / Service', tasks: [] }
+      );
+      return spaces;
+    }
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (!raw) return { spaces: createDefaultSpaces() };
+        const state = JSON.parse(raw);
+        if (!state.spaces) state.spaces = createDefaultSpaces();
+        return state;
+        } catch (e) {
+        return { spaces: createDefaultSpaces() };
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    let state = loadState();
+    let selectedSpaceId = state.spaces[0]?.id || null;
+    let currentFilter = 'all';
+    let selectedCategory = 'all';
+
+    // Category definitions
+    const categories = {
+      all: { name: 'All Categories', icon: 'fas fa-th' },
+      civil: { name: 'Civil', icon: 'fas fa-hard-hat' },
+      electrical: { name: 'Electrical', icon: 'fas fa-bolt' },
+      plumbing: { name: 'Plumbing', icon: 'fas fa-faucet' },
+      hvac: { name: 'HVAC', icon: 'fas fa-wind' },
+      flooring: { name: 'Flooring', icon: 'fas fa-square' },
+      ceiling: { name: 'Ceiling', icon: 'fas fa-layer-group' },
+      painting: { name: 'Painting', icon: 'fas fa-paint-roller' },
+      joinery: { name: 'Joinery', icon: 'fas fa-hammer' },
+      tiles: { name: 'Tiles', icon: 'fas fa-th-large' },
+      fixtures: { name: 'Fixtures & Fittings', icon: 'fas fa-lightbulb' },
+      finishes: { name: 'Finishes', icon: 'fas fa-palette' },
+      mep: { name: 'MEP', icon: 'fas fa-cogs' },
+      other: { name: 'Other', icon: 'fas fa-ellipsis-h' }
+    };
+
+    // Helpers
+    function uid() {
+      return 't-' + Date.now() + '-' + Math.random().toString(36).slice(2, 9);
+    }
+
+    function getTodayISO() {
+      return new Date().toISOString().slice(0, 10);
+    }
+
+    function findSpace(id) {
+      return state.spaces.find(s => s.id === id);
+    }
+
+    function findTask(space, taskId) {
+      return space?.tasks.find(t => t.id === taskId);
+    }
+
+    // Toast
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const msg = document.getElementById('toastMessage');
+      msg.textContent = message;
+      toast.className = `toast ${type}`;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    // Metrics
+    function updateMetrics() {
+      const today = getTodayISO();
+      let totalTasks = 0;
+      let doneTasks = 0;
+      let overdue = 0;
+
+      state.spaces.forEach(space => {
+        space.tasks.forEach(task => {
+          totalTasks++;
+          if (task.status === 'done') doneTasks++;
+          else if (task.deadline && task.deadline < today) overdue++;
+        });
+      });
+
+      const completion = totalTasks ? Math.round((doneTasks / totalTasks) * 100) : 0;
+      document.getElementById('statSpaces').textContent = state.spaces.length;
+      document.getElementById('statTasks').textContent = totalTasks;
+      document.getElementById('statCompletion').textContent = completion + '%';
+    }
+
+    function getSpaceMetrics(space) {
+      const today = getTodayISO();
+      let total = 0, done = 0, dueToday = 0, overdue = 0;
+
+      space.tasks.forEach(task => {
+        total++;
+        if (task.status === 'done') done++;
+        else {
+          if (task.deadline === today) dueToday++;
+          if (task.deadline && task.deadline < today) overdue++;
+        }
+      });
+
+      return { total, done, dueToday, overdue, completion: total ? Math.round((done / total) * 100) : 0 };
+    }
+
+    // Rendering
+    function setFilter(filter) {
+      currentFilter = filter;
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.textContent.toLowerCase().includes(filter === 'all' ? 'all' : filter));
+      });
+      renderSpaces();
+    }
+
+    function selectSpace(spaceId) {
+      selectedSpaceId = spaceId;
+      renderSpaces();
+      renderTasks();
+    }
+
+    function renderSpaces() {
+      const list = document.getElementById('spacesList');
+      const filtered = state.spaces.filter(s => currentFilter === 'all' || s.type === currentFilter);
+
+      if (!filtered.length) {
+        list.innerHTML = '<div class="empty-state"><p>No spaces found</p></div>';
+          return;
+        }
+
+      list.innerHTML = filtered.map(space => {
+        const metrics = getSpaceMetrics(space);
+        const isActive = selectedSpaceId === space.id;
+        const typeLabels = { room: 'Room', restaurant: 'Restaurant', public: 'Public' };
+        const canEdit = isAdmin();
+
+        return `
+          <div class="space-item ${isActive ? 'active' : ''}" onclick="if(!event.target.closest('.space-edit-btn, .space-name-editable input')) selectSpace('${space.id}')">
+            <div class="space-header">
+              <div style="flex: 1;">
+                <div class="space-name-editable">
+                  ${canEdit ? `
+                    <input 
+                      type="text" 
+                      value="${space.name}" 
+                      onblur="updateSpaceName('${space.id}', this.value)"
+                      onkeypress="if(event.key==='Enter') this.blur()"
+                      onclick="event.stopPropagation()"
+                    />
+                    <i class="fas fa-edit space-edit-btn" title="Edit name"></i>
+                  ` : `
+                    <span>${space.name}</span>
+                  `}
+                </div>
+                <div class="space-type">${typeLabels[space.type]}</div>
+          </div>
+        </div>
+            <div class="space-stats">
+              <span>${metrics.total} tasks</span>
+              <span>·</span>
+              <span>${metrics.completion}% done</span>
+              ${metrics.overdue > 0 ? `<span style="color: var(--danger);">· ${metrics.overdue} overdue</span>` : ''}
+            </div>
+            <div class="space-progress">
+              <div class="space-progress-bar" style="width: ${metrics.completion}%"></div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderTasks() {
+      const list = document.getElementById('tasksList');
+      const space = findSpace(selectedSpaceId);
+      const titleEl = document.getElementById('currentSpaceTitle');
+      const subtitleEl = document.getElementById('currentSpaceSubtitle');
+
+      if (!space) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon"><i class="fas fa-hand-pointer"></i></div>
+            <h3>Select a Space</h3>
+            <p>Choose a room, restaurant, or public area from the sidebar</p>
+          </div>
+        `;
+        titleEl.textContent = 'Select a Space';
+        subtitleEl.textContent = 'Choose a room, restaurant, or public area to get started';
+        ['badgeDueToday', 'badgeOverdue', 'badgeDone'].forEach(id => {
+          document.getElementById(id).textContent = '0';
+        });
+        return;
+      }
+
+      // Filter tasks by category
+      let filteredTasks = space.tasks;
+      if (selectedCategory !== 'all') {
+        filteredTasks = space.tasks.filter(task => task.category === selectedCategory);
+      }
+
+      // Recalculate metrics for filtered tasks
+      const today = getTodayISO();
+      let total = 0, done = 0, dueToday = 0, overdue = 0;
+      filteredTasks.forEach(task => {
+        total++;
+        if (task.status === 'done') done++;
+        else {
+          if (task.deadline === today) dueToday++;
+          if (task.deadline && task.deadline < today) overdue++;
+        }
+      });
+
+      titleEl.textContent = space.name;
+      subtitleEl.textContent = space.label;
+      document.getElementById('badgeDueToday').textContent = dueToday;
+      document.getElementById('badgeOverdue').textContent = overdue;
+      document.getElementById('badgeDone').textContent = done;
+
+      if (!filteredTasks.length) {
+        const categoryText = selectedCategory === 'all' ? '' : ` in ${categories[selectedCategory].name}`;
+        list.innerHTML = `
+          <div class="empty-state">
+            <div class="empty-state-icon"><i class="fas fa-clipboard-list"></i></div>
+            <h3>No tasks${categoryText} for ${space.name}</h3>
+            <p>${selectedCategory === 'all' ? 'Add your first task using the form above' : 'Try selecting a different category or add a new task'}</p>
+          </div>
+        `;
+          return;
+        }
+
+      list.innerHTML = filteredTasks.map((task, idx) => renderTaskCard(space, task, idx)).join('');
+    }
+
+    function renderTaskCard(space, task, index) {
+      const today = getTodayISO();
+      const isOverdue = task.status !== 'done' && task.deadline && task.deadline < today;
+      const isDueToday = task.status !== 'done' && task.deadline === today;
+      const deadlineClass = isOverdue ? 'overdue' : isDueToday ? 'due-today' : '';
+      const statusClass = `status-${task.status}`;
+      const doneSubtasks = task.subtasks?.filter(st => st.done).length || 0;
+      const totalSubtasks = task.subtasks?.length || 0;
+      const taskCategory = task.category || 'other';
+      const categoryInfo = categories[taskCategory] || categories.other;
+
+      return `
+        <div class="task-card" data-task-id="${task.id}">
+          <div class="task-header">
+            <div class="task-title-section">
+              <div class="task-title">
+                <i class="${categoryInfo.icon}" style="color: var(--primary);"></i>
+                ${task.title}
+                <span style="font-size: 12px; color: var(--text-light); font-weight: normal;">#${index + 1}</span>
+                <span style="font-size: 11px; padding: 2px 8px; background: var(--bg); border-radius: 4px; color: var(--text-secondary); margin-left: 8px;">
+                  ${categoryInfo.name}
+            </span>
+              </div>
+              <div class="task-meta">
+                <span class="task-status ${statusClass}">
+                  <i class="fas fa-circle" style="font-size: 6px;"></i>
+                  ${task.status === 'done' ? 'Done' : task.status === 'in-progress' ? 'In Progress' : 'Todo'}
+                </span>
+                ${task.deadline ? `
+                  <span class="task-deadline ${deadlineClass}">
+                    <i class="far fa-calendar-alt"></i>
+                    ${task.deadline}${isOverdue ? ' (Overdue)' : isDueToday ? ' (Due Today)' : ''}
+                  </span>
+                ` : ''}
+              </div>
+            </div>
+            <div class="task-actions">
+              <select class="btn-icon" style="padding: 0 8px;" onchange="updateTaskStatus('${space.id}', '${task.id}', this.value)">
+                <option value="todo" ${task.status === 'todo' ? 'selected' : ''}>Todo</option>
+                <option value="in-progress" ${task.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
+                <option value="done" ${task.status === 'done' ? 'selected' : ''}>Done</option>
+              </select>
+              <button class="btn-icon" onclick="editTaskDeadline('${space.id}', '${task.id}')" title="Edit Deadline">
+                <i class="far fa-calendar"></i>
+              </button>
+              <button class="btn-icon danger" onclick="deleteTask('${space.id}', '${task.id}')" title="Delete Task">
+                <i class="fas fa-trash"></i>
+                </button>
+              </div>
+            </div>
+
+          <div class="task-remarks">
+            <textarea 
+              placeholder="Add remarks, site notes, or coordination details..."
+              onblur="updateTaskRemarks('${space.id}', '${task.id}', this.value)"
+            >${task.remarks || ''}</textarea>
+            </div>
+
+          <div class="subtasks-section">
+            <div class="subtasks-header">
+              <div class="subtasks-title">
+                Subtasks
+                <span class="subtasks-count">(${doneSubtasks}/${totalSubtasks} completed)</span>
+          </div>
+            </div>
+            <div class="subtasks-list">
+              ${renderSubtasks(space, task)}
+            </div>
+            <form class="subtask-add-form" onsubmit="event.preventDefault(); addSubtask('${space.id}', '${task.id}')">
+              <input type="text" id="subtaskTitle-${task.id}" placeholder="Subtask title" required />
+              <input type="date" id="subtaskDeadline-${task.id}" />
+              <input type="text" id="subtaskRemarks-${task.id}" placeholder="Remarks (optional)" />
+              <button type="submit" class="btn btn-secondary btn-sm">
+              <i class="fas fa-plus"></i> Add
+            </button>
+            </form>
+          </div>
+        </div>
+      `;
+    }
+
+    function renderSubtasks(space, task) {
+      const subtasks = task.subtasks || [];
+      if (!subtasks.length) {
+        return '<div style="padding: 12px; color: var(--text-light); font-size: 13px; text-align: center;">No subtasks yet. Add subtasks to break down this task.</div>';
+      }
+
+      const today = getTodayISO();
+      return subtasks.map(subtask => {
+        const isOverdue = !subtask.done && subtask.deadline && subtask.deadline < today;
+        const isDueToday = !subtask.done && subtask.deadline === today;
+        const deadlineClass = isOverdue ? 'overdue' : isDueToday ? 'due-today' : '';
+
+        return `
+          <div class="subtask-item">
+            <div class="subtask-checkbox ${subtask.done ? 'checked' : ''}" onclick="toggleSubtask('${space.id}', '${task.id}', '${subtask.id}')">
+              ${subtask.done ? '<i class="fas fa-check" style="font-size: 10px;"></i>' : ''}
+            </div>
+            <div class="subtask-title ${subtask.done ? 'completed' : ''}">${subtask.title}</div>
+            <div class="subtask-deadline ${deadlineClass}">
+              ${subtask.deadline || '—'}
+              ${isOverdue ? ' (Overdue)' : isDueToday ? ' (Today)' : ''}
+          </div>
+            <div class="subtask-remarks">${subtask.remarks || ''}</div>
+            <button class="btn-icon danger" onclick="deleteSubtask('${space.id}', '${task.id}', '${subtask.id}')" title="Delete">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Category Menu Operations
+    function toggleCategoryMenu() {
+      const dropdown = document.getElementById('categoryDropdown');
+      dropdown.classList.toggle('show');
+    }
+
+    function selectCategory(category) {
+      selectedCategory = category;
+      const categoryInfo = categories[category];
+      document.getElementById('categoryName').textContent = categoryInfo.name;
+      
+      // Update active state in dropdown
+      document.querySelectorAll('.category-item').forEach(item => {
+        item.classList.remove('active');
+        if (item.textContent.includes(categoryInfo.name)) {
+          item.classList.add('active');
+        }
+      });
+      
+      // Close dropdown
+      document.getElementById('categoryDropdown').classList.remove('show');
+      
+      // Re-render tasks
+      renderTasks();
+    }
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+      const dropdown = document.getElementById('categoryDropdown');
+      const btn = document.querySelector('.burger-menu-btn');
+      if (dropdown && !dropdown.contains(event.target) && !btn.contains(event.target)) {
+        dropdown.classList.remove('show');
+      }
+    });
+
+    // Task Operations
+    function handleAddTask(event) {
+      event.preventDefault();
+      const space = findSpace(selectedSpaceId);
+      if (!space) {
+        showToast('Please select a space first', 'error');
+        return;
+      }
+
+      const title = document.getElementById('taskTitle').value.trim();
+      const category = document.getElementById('taskCategory').value;
+      if (!title || !category) {
+        showToast('Please fill in task title and category', 'error');
+        return;
+      }
+
+      const task = {
+        id: uid(),
+        title,
+        category,
+        deadline: document.getElementById('taskDeadline').value || '',
+        assignedTo: document.getElementById('taskAssignedTo').value.trim() || (currentUser ? currentUser.name : 'Unassigned'),
+        status: document.getElementById('taskStatus').value || 'todo',
+        remarks: '',
+        subtasks: []
+      };
+
+      space.tasks.push(task);
+      saveState();
+      updateMetrics();
+      renderSpaces();
+      renderTasks();
+      document.getElementById('addTaskForm').reset();
+      showToast('Task added successfully');
+    }
+
+    function updateTaskStatus(spaceId, taskId, status) {
+      const space = findSpace(spaceId);
+      const task = findTask(space, taskId);
+      if (!task) return;
+      task.status = status;
+      saveState();
+      updateMetrics();
+      renderSpaces();
+      renderTasks();
+      showToast('Status updated');
+    }
+
+    function editTaskDeadline(spaceId, taskId) {
+      const space = findSpace(spaceId);
+      const task = findTask(space, taskId);
+      if (!task) return;
+      const newDate = prompt('Set deadline (YYYY-MM-DD):', task.deadline || '');
+      if (newDate === null) return;
+      if (newDate && !/^\d{4}-\d{2}-\d{2}$/.test(newDate)) {
+        alert('Please use YYYY-MM-DD format');
+        return;
+      }
+      task.deadline = newDate.trim();
+      saveState();
+      updateMetrics();
+      renderTasks();
+      showToast('Deadline updated');
+    }
+
+    function updateTaskRemarks(spaceId, taskId, remarks) {
+      const space = findSpace(spaceId);
+      const task = findTask(space, taskId);
+      if (!task) return;
+      task.remarks = remarks.trim();
+      saveState();
+    }
+
+    function deleteTask(spaceId, taskId) {
+      if (!confirm('Delete this task and all its subtasks?')) return;
+      const space = findSpace(spaceId);
+      if (!space) return;
+      space.tasks = space.tasks.filter(t => t.id !== taskId);
+      saveState();
+      updateMetrics();
+      renderSpaces();
+      renderTasks();
+      showToast('Task deleted');
+    }
+
+    // Subtask Operations
+    function addSubtask(spaceId, taskId) {
+      const space = findSpace(spaceId);
+      const task = findTask(space, taskId);
+      if (!task) return;
+
+      const titleInput = document.getElementById(`subtaskTitle-${taskId}`);
+      const deadlineInput = document.getElementById(`subtaskDeadline-${taskId}`);
+      const remarksInput = document.getElementById(`subtaskRemarks-${taskId}`);
+
+      const title = titleInput.value.trim();
+      if (!title) return;
+
+      if (!task.subtasks) task.subtasks = [];
+      task.subtasks.push({
+        id: uid(),
+        title,
+        deadline: deadlineInput?.value || '',
+        remarks: remarksInput?.value.trim() || '',
+        done: false
+      });
+
+      titleInput.value = '';
+      if (deadlineInput) deadlineInput.value = '';
+      if (remarksInput) remarksInput.value = '';
+
+      saveState();
+      updateMetrics();
+      renderTasks();
+      showToast('Subtask added');
+    }
+
+    function toggleSubtask(spaceId, taskId, subtaskId) {
+      const space = findSpace(spaceId);
+      const task = findTask(space, taskId);
+      if (!task?.subtasks) return;
+      const subtask = task.subtasks.find(st => st.id === subtaskId);
+      if (!subtask) return;
+      subtask.done = !subtask.done;
+      saveState();
+      updateMetrics();
+      renderTasks();
+      showToast(subtask.done ? 'Subtask completed' : 'Subtask reopened');
+    }
+
+    function deleteSubtask(spaceId, taskId, subtaskId) {
+      const space = findSpace(spaceId);
+      const task = findTask(space, taskId);
+      if (!task?.subtasks) return;
+      task.subtasks = task.subtasks.filter(st => st.id !== subtaskId);
+      saveState();
+      updateMetrics();
+      renderTasks();
+      showToast('Subtask deleted');
+    }
+
+    // Workflow State
+    let selectedWorkflowCategory = null;
+    let workflowNodeStatuses = JSON.parse(localStorage.getItem('workflowNodeStatuses')) || {};
+
+    // Workflow Modal Functions
+    function showWorkflow() {
+      document.getElementById('workflowModal').classList.add('show');
+      document.body.style.overflow = 'hidden';
+      updateWorkflowNodeStatuses();
+    }
+
+    function closeWorkflow() {
+      document.getElementById('workflowModal').classList.remove('show');
+      document.body.style.overflow = '';
+      selectedWorkflowCategory = null;
+    }
+
+    function closeWorkflowOnOverlay(event) {
+      if (event.target.id === 'workflowModal') {
+        closeWorkflow();
+      }
+    }
+
+    // Update node statuses from storage
+    function updateWorkflowNodeStatuses() {
+      document.querySelectorAll('.flowchart-node').forEach(node => {
+        const category = node.dataset.category;
+        const status = workflowNodeStatuses[category] || 'todo';
+        const statusBtn = node.querySelector('.node-status-btn');
+        if (statusBtn) {
+          statusBtn.className = `node-status-btn ${status}`;
+        }
+        // Apply status class to node itself for color change
+        node.classList.remove('status-todo', 'status-in-progress', 'status-done');
+        node.classList.add(`status-${status}`);
+      });
+    }
+
+    // Select workflow node
+    function selectWorkflowNode(category, nodeElement, event) {
+      if (event.target.closest('.node-status-btn') || event.target.closest('.node-status-dropdown')) {
+        return; // Don't select if clicking status button
+      }
+
+      // Remove previous selection
+      document.querySelectorAll('.flowchart-node').forEach(n => n.classList.remove('selected'));
+      
+      // Add selection to clicked node
+      nodeElement.classList.add('selected');
+      selectedWorkflowCategory = category;
+
+      // Load and display tasks
+      loadWorkflowTasks(category);
+    }
+
+    // Toggle node status dropdown
+    function toggleNodeStatus(btn, event) {
+      event.stopPropagation();
+      const dropdown = btn.nextElementSibling;
+      const isOpen = dropdown.classList.contains('show');
+      
+      // Close all dropdowns
+      document.querySelectorAll('.node-status-dropdown').forEach(d => d.classList.remove('show'));
+      
+      // Toggle this dropdown
+      if (!isOpen) {
+        dropdown.classList.add('show');
+      }
+    }
+
+    // Set node status
+    function setNodeStatus(category, status, optionElement) {
+      workflowNodeStatuses[category] = status;
+      localStorage.setItem('workflowNodeStatuses', JSON.stringify(workflowNodeStatuses));
+
+      // Update button and node
+      const node = document.querySelector(`.flowchart-node[data-category="${category}"]`);
+      if (node) {
+        const statusBtn = node.querySelector('.node-status-btn');
+        if (statusBtn) {
+          statusBtn.className = `node-status-btn ${status}`;
+        }
+        // Apply status class to node for color change
+        node.classList.remove('status-todo', 'status-in-progress', 'status-done');
+        node.classList.add(`status-${status}`);
+      }
+
+      // Close dropdown
+      document.querySelectorAll('.node-status-dropdown').forEach(d => d.classList.remove('show'));
+
+      // Reload tasks if this category is selected
+      if (selectedWorkflowCategory === category) {
+        loadWorkflowTasks(category);
+      }
+    }
+
+    // Load tasks for selected category
+    function loadWorkflowTasks(category) {
+      const categoryInfo = categories[category] || categories.other;
+      const titleEl = document.getElementById('workflowCategoryTitle');
+      const descEl = document.getElementById('workflowCategoryDesc');
+      const metricsEl = document.getElementById('workflowMetrics');
+      const tasksListEl = document.getElementById('workflowTasksList');
+
+      titleEl.textContent = categoryInfo.name;
+      descEl.textContent = `Tasks related to ${categoryInfo.name} work`;
+
+      // Collect all tasks from all spaces for this category
+      const today = getTodayISO();
+      let allTasks = [];
+      let total = 0, done = 0, inProgress = 0, todo = 0;
+
+      state.spaces.forEach(space => {
+        space.tasks.forEach(task => {
+          if (task.category === category) {
+            allTasks.push({ ...task, spaceName: space.name, spaceId: space.id });
+            total++;
+            if (task.status === 'done') done++;
+            else if (task.status === 'in-progress') inProgress++;
+            else todo++;
+          }
+        });
+      });
+
+      // Update metrics
+      const progress = total ? Math.round((done / total) * 100) : 0;
+      document.getElementById('wfMetricTotal').textContent = total;
+      document.getElementById('wfMetricDone').textContent = done;
+      document.getElementById('wfMetricProgress').textContent = progress + '%';
+      metricsEl.style.display = total > 0 ? 'grid' : 'none';
+
+      // Render tasks
+      if (allTasks.length === 0) {
+        tasksListEl.innerHTML = `
+          <div class="workflow-empty-state">
+            <i class="fas fa-inbox"></i>
+            <p>No tasks found for ${categoryInfo.name}</p>
+            <p style="font-size: 12px; margin-top: 8px; color: var(--text-light);">Add tasks with this category to see them here</p>
+          </div>
+        `;
+        return;
+      }
+
+      tasksListEl.innerHTML = allTasks.map(task => {
+        const isOverdue = task.status !== 'done' && task.deadline && task.deadline < today;
+        const isDueToday = task.status !== 'done' && task.deadline === today;
+        const statusClass = `status-${task.status}`;
+        const statusLabel = task.status === 'done' ? 'Done' : task.status === 'in-progress' ? 'In Progress' : 'Todo';
+
+        return `
+          <div class="workflow-task-item" onclick="navigateToTask('${task.spaceId}', '${task.id}')">
+            <div class="workflow-task-title">${task.title}</div>
+            <div class="workflow-task-meta">
+              <span class="workflow-task-space">
+                <i class="fas fa-map-marker-alt"></i>
+                ${task.spaceName}
+              </span>
+              <span class="task-status ${statusClass}">${statusLabel}</span>
+              ${task.deadline ? `
+                <span style="color: ${isOverdue ? 'var(--danger)' : isDueToday ? 'var(--warning)' : 'var(--text-secondary)'};">
+                  <i class="far fa-calendar-alt"></i>
+                  ${task.deadline}${isOverdue ? ' (Overdue)' : isDueToday ? ' (Today)' : ''}
+                </span>
+              ` : ''}
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Navigate to task in main view
+    function navigateToTask(spaceId, taskId) {
+      closeWorkflow();
+      selectSpace(spaceId);
+      setTimeout(() => {
+        const taskCard = document.querySelector(`[data-task-id="${taskId}"]`);
+        if (taskCard) {
+          taskCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          taskCard.style.animation = 'pulse 0.5s';
+          setTimeout(() => taskCard.style.animation = '', 500);
+        }
+      }, 300);
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+      if (!event.target.closest('.node-status-btn') && !event.target.closest('.node-status-dropdown')) {
+        document.querySelectorAll('.node-status-dropdown').forEach(d => d.classList.remove('show'));
+      }
+    });
+
+    // Close modal on Escape key
+    document.addEventListener('keydown', function(event) {
+      if (event.key === 'Escape') {
+        closeWorkflow();
+      }
+    });
+
+    // Update Space Name
+    function updateSpaceName(spaceId, newName) {
+      if (!isAdmin()) {
+        showToast('Only admins can edit room names', 'error');
+        return;
+      }
+      
+      const space = findSpace(spaceId);
+      if (!space) return;
+      
+      const trimmedName = newName.trim();
+      if (!trimmedName) {
+        showToast('Name cannot be empty', 'error');
+        renderSpaces();
+        return;
+      }
+      
+      space.name = trimmedName;
+      if (space.type === 'room') {
+        space.label = `Guest Room ${trimmedName}`;
+      }
+      
+      saveState();
+      renderSpaces();
+      renderTasks();
+      showToast('Room name updated');
+    }
+
+    // Initialize
+    function init() {
+      initUser();
+      updateMetrics();
+      renderSpaces();
+      renderTasks();
+      // Set default category selection
+      const firstCategory = document.querySelector('.category-item');
+      if (firstCategory) firstCategory.classList.add('active');
+    }
+
+    init();
+  </script>
+</body>
+</html>
